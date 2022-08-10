@@ -10,7 +10,9 @@ import javax.validation.Valid;
 public class UserController {
 
     @PostMapping
-    public UserDto createUser(@RequestBody @Valid UserDto user) {
-        return user;
+    public UserDto createUser(@RequestBody @Valid UserDto dto) {
+        return dto;
     }
+
+
 }
