@@ -3,5 +3,5 @@ package ru.practicum.shareit.item.model;
 /**
  * // TODO .
  */
-public class Item {
+public class ItemModel {
 }
