@@ -1,40 +1,55 @@
 package ru.practicum.shareit.user.dao;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.entity.User;
+import ru.practicum.shareit.user.model.User;
 
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
+    private long currentId;
+    private final Map<Long, User> users;
+
+    public InMemoryUserRepository() {
+        currentId = 1;
+        users = new HashMap<>();
+    }
 
     @Override
     public User createUser(User user) {
-        return null;
+        long id = generateId();
+        user.setId(id);
+        users.put(id, user);
+        return user;
     }
 
     @Override
-    public User deleteUser(long id) {
-        return null;
+    public Optional<User> deleteUser(long id) {
+        return Optional.ofNullable(users.remove(id));
     }
 
     @Override
-    public boolean emailIsAvailable(long userId, String email) {
-        return userId == 0 && email.equals("user@user.com");
+    public Optional<User> getByEmail(String email) {
+        return users.values().stream().filter(user -> user.getEmail().equals(email)).findFirst();
     }
 
     @Override
     public List<User> getAll() {
-        return null;
+        return new ArrayList<>(users.values());
     }
 
     @Override
-    public User getUser(long id) {
-        return null;
+    public Optional<User> getUser(long id) {
+        return Optional.ofNullable(users.get(id));
     }
 
     @Override
     public User updateUser(User user) {
-        return null;
+        users.put(user.getId(), user);
+        return user;
+    }
+
+    private long generateId() {
+        return currentId++;
     }
 }

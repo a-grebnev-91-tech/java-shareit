@@ -1,19 +1,20 @@
 package ru.practicum.shareit.user.dao;
 
-import ru.practicum.shareit.user.entity.User;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
     User createUser(User user);
 
-    User deleteUser(long id);
+    Optional<User> deleteUser(long id);
 
-    boolean emailIsAvailable(long userId, String email);
+    Optional<User> getByEmail(String email);
 
     List<User> getAll();
 
-    User getUser(long id);
+    Optional<User> getUser(long id);
 
     User updateUser(User user);
 }

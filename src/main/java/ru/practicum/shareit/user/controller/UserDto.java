@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.dto;
+package ru.practicum.shareit.user.controller;
 
 import lombok.*;
 import ru.practicum.shareit.user.validation.UniqueEmail;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @UniqueEmail
 public class UserDto {
-    private long id;
+    private Long id;
     private String name;
     @NotBlank(message = "Email should be not blank")
     @Email(message = "Email should be valid email")
