@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import ru.practicum.shareit.exception.ConflictEmailException;
 import ru.practicum.shareit.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +23,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-//@RestControllerAdvice
-public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+@RestControllerAdvice
+public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String TIMESTAMP = "timestamp";
     private static final String STATUS = "status";
     private static final String ERROR = "error";
@@ -39,14 +40,20 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler(value = ConflictEmailException.class)
+    protected ResponseEntity<Object> handleConflictEmailException(ConflictEmailException ex, WebRequest request) {
+        log.warn(ex.getMessage());
+        Map<String, Object> body = getGeneralErrorBody(HttpStatus.CONFLICT, request);
+        body.put(REASONS, ex.getMessage());
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
                                                                   WebRequest request) {
         log.warn("Not Valid. Massege: {}", ex.getMessage());
-        List<ObjectError> er = ex.getBindingResult().getAllErrors();
-        ObjectError ere = er.get(0);
         Map<String, Object> body = getGeneralErrorBody(status, request);
         List<String> errors = ex.getBindingResult()
                 .getAllErrors()
@@ -69,7 +76,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     private String getErrorString(ObjectError error) {
         if (error instanceof FieldError) {
-            return ((FieldError) error).getField() + ' ' + error.getDefaultMessage();
+            return ((FieldError) error).getField() + " : " + error.getDefaultMessage();
         }
         return error.getDefaultMessage();
     }
