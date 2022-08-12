@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.model;
 
 import ru.practicum.shareit.user.controller.UserDto;
+import ru.practicum.shareit.user.controller.UserPatchDto;
 
 import java.util.List;
 
@@ -13,5 +14,5 @@ public interface UserService {
 
     UserDto getUser(long id);
 
-    UserDto updateUserState(long userId, UserDto user);
+    UserDto updateUserState(long userId, UserPatchDto user);
 }

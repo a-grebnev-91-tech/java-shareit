@@ -3,11 +3,14 @@ package ru.practicum.shareit.user.model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.user.controller.UserPatchDto;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.controller.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
 import javax.validation.Valid;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,11 +28,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(long id) {
-        if (isUserExist(id)) {
-            repository.deleteUser(id);
-        } else {
-            throw new NotFoundException(String.format("User with id %d isn't exist", id));
-        }
+        throwExceptionIfNotExist(id);
+        repository.deleteUser(id);
     }
 
     @Override
@@ -49,18 +49,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUserState(long userId, UserDto user) {
-        if (!isUserExist(userId)) {
-            throw new NotFoundException(String.format("User with id %d isn't exist", userId));
-        }
-        user.setId(userId);
-        if (user.getEmail() != null) {
-        }
-
-        return mapper.toDto(repository.updateUser(mapper.toModel(user)));
+    public UserDto updateUserState(long userId, UserPatchDto patch) {
+        throwExceptionIfNotExist(userId);
+        User existingUser = repository.getUser(userId).get();
+        Arrays.stream(patch.getClass().getDeclaredFields())
+                .peek(field -> field.setAccessible(true))
+                .filter(field -> {
+                    try {
+                        return field.get(patch) != null;
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList())
+                .forEach(fieldToPatch -> {
+                    try {
+                        Field existingUserField = existingUser.getClass().getDeclaredField(fieldToPatch.getName());
+                        existingUserField.setAccessible(true);
+                        existingUserField.set(existingUser, fieldToPatch.get(patch));
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        return mapper.toDto(repository.updateUser(existingUser));
     }
 
-    private boolean isUserExist(long id) {
-        return repository.getUser(id).isPresent();
+    private void throwExceptionIfNotExist(long id) {
+        if (repository.getUser(id).isEmpty()) {
+            throw new NotFoundException(String.format("User with id %d isn't exist", id));
+        }
     }
 }
