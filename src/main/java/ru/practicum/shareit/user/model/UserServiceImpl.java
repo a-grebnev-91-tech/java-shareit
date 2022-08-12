@@ -55,13 +55,9 @@ public class UserServiceImpl implements UserService {
         }
         user.setId(userId);
         if (user.getEmail() != null) {
-            validateUser(user);
         }
-        
-        return mapper.toDto(repository.updateUser(mapper.toModel(user)));
-    }
 
-    private void validateUser(@Valid UserDto user) {
+        return mapper.toDto(repository.updateUser(mapper.toModel(user)));
     }
 
     private boolean isUserExist(long id) {
