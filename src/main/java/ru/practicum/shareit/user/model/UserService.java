@@ -14,5 +14,5 @@ public interface UserService {
 
     UserDto getUser(long id);
 
-    UserDto updateUserState(long userId, UserPatchDto user);
+    UserDto patchUser(long userId, UserPatchDto user);
 }

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -32,6 +33,22 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     private static final String REASONS = "reasons";
 
+    @ExceptionHandler(value = ConflictEmailException.class)
+    protected ResponseEntity<Object> handleConflictEmail(ConflictEmailException ex, WebRequest request) {
+        log.warn(ex.getMessage());
+        Map<String, Object> body = getGeneralErrorBody(HttpStatus.CONFLICT, request);
+        body.put(REASONS, ex.getMessage());
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(value = MissingRequestHeaderException.class)
+    protected ResponseEntity<Object> handleMissingRequestHeader(MissingRequestHeaderException ex, WebRequest request) {
+        log.warn(ex.getMessage());
+        Map<String, Object> body = getGeneralErrorBody(HttpStatus.BAD_REQUEST, request);
+        body.put(REASONS, ex.getMessage());
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
     @ExceptionHandler(value = NotFoundException.class)
     protected ResponseEntity<Object> handleNotFound(NotFoundException ex, WebRequest request) {
         log.warn("Not found error: {}", ex.getMessage());
@@ -40,19 +57,13 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler(value = ConflictEmailException.class)
-    protected ResponseEntity<Object> handleConflictEmailException(ConflictEmailException ex, WebRequest request) {
-        log.warn(ex.getMessage());
-        Map<String, Object> body = getGeneralErrorBody(HttpStatus.CONFLICT, request);
-        body.put(REASONS, ex.getMessage());
-        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.CONFLICT, request);
-    }
-
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatus status,
-                                                                  WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request
+    ) {
         log.warn("Not Valid. Massege: {}", ex.getMessage());
         Map<String, Object> body = getGeneralErrorBody(status, request);
         List<String> errors = ex.getBindingResult()
@@ -64,8 +75,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return new ResponseEntity<>(body, headers, status);
     }
 
-    private Map<String, Object> getGeneralErrorBody(HttpStatus status,
-                                                    WebRequest request) {
+    private Map<String, Object> getGeneralErrorBody(HttpStatus status, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(TIMESTAMP, OffsetDateTime.now());
         body.put(STATUS, status.value());

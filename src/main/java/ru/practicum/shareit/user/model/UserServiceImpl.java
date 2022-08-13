@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUserState(long userId, UserPatchDto patch) {
+    public UserDto patchUser(long userId, UserPatchDto patch) {
         throwExceptionIfNotExist(userId);
         User existingUser = repository.getUser(userId).get();
         Arrays.stream(patch.getClass().getDeclaredFields())
@@ -73,9 +73,9 @@ public class UserServiceImpl implements UserService {
         return mapper.toDto(repository.updateUser(existingUser));
     }
 
-    private void throwExceptionIfNotExist(long id) {
-        if (repository.getUser(id).isEmpty()) {
-            throw new NotFoundException(String.format("User with id %d isn't exist", id));
+        private void throwExceptionIfNotExist(long id) {
+            if (repository.getUser(id).isEmpty()) {
+                throw new NotFoundException(String.format("User with id %d isn't exist", id));
+            }
         }
-    }
 }

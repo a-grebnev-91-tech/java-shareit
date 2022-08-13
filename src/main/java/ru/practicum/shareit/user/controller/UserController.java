@@ -41,9 +41,9 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserDto updateUserState(@PathVariable("id") long id, @RequestBody @Valid UserPatchDto user) {
+    public UserDto patchUser(@PathVariable("id") long id, @RequestBody @Valid UserPatchDto user) {
         log.info("Updating user with id {}", id);
-        return service.updateUserState(id, user);
+        return service.patchUser(id, user);
     }
 }
 
