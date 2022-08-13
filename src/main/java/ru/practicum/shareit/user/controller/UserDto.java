@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 public class UserDto {
     private Long id;
     private String name;
-    @NotNull
-    @Email(message = "Email should be valid email")
+    @NotNull(message = "email should not be null")
+    @Email(message = "email should be valid email address")
     @UniqueEmail
     private String email;
 }

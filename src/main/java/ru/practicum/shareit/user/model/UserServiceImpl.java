@@ -8,7 +8,6 @@ import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.controller.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
-import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
