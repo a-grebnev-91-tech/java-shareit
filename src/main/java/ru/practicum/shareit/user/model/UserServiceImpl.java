@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(long id) {
-        throwExceptionIfNotExist(id);
+        getUserOrThrow(id);
         repository.deleteUser(id);
     }
 
@@ -49,8 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto patchUser(long userId, UserPatchDto patch) {
-        throwExceptionIfNotExist(userId);
-        User existingUser = repository.getUser(userId).get();
+        User existingUser = getUserOrThrow(userId);
         Arrays.stream(patch.getClass().getDeclaredFields())
                 .peek(field -> field.setAccessible(true))
                 .filter(field -> {
@@ -73,9 +72,8 @@ public class UserServiceImpl implements UserService {
         return mapper.toDto(repository.updateUser(existingUser));
     }
 
-        private void throwExceptionIfNotExist(long id) {
-            if (repository.getUser(id).isEmpty()) {
-                throw new NotFoundException(String.format("User with id %d isn't exist", id));
-            }
-        }
+    private User getUserOrThrow(long userId) {
+        Optional<User> user = repository.getUser(userId);
+        return user.orElseThrow(() -> new NotFoundException(String.format("User with id %d isn't exist", userId)));
+    }
 }

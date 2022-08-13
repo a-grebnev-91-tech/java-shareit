@@ -2,8 +2,8 @@ package ru.practicum.shareit.item.dao;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryItemRepository implements ItemRepository {
@@ -23,7 +23,38 @@ public class InMemoryItemRepository implements ItemRepository {
         return item;
     }
 
+    @Override
+    public List<Item> getAllByUser(long userId) {
+        return items.values().stream().filter(item -> item.getOwnerId() == userId).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Item> getItem(long itemId) {
+        return Optional.ofNullable(items.get(itemId));
+    }
+
+    @Override
+    public List<Item> searchItem(String text) {
+        return items.values()
+                .stream()
+                .filter(item -> item.isAvailable() && isItemSuitForText(item, text))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Item updateItem(Item item) {
+        items.put(item.getId(), item);
+        return item;
+    }
+
     private long generateId() {
         return currentId++;
+    }
+
+    private boolean isItemSuitForText(Item item, String text) {
+        if (text.isBlank())
+            return false;
+        text = text.toLowerCase();
+        return item.getName().toLowerCase().contains(text) || item.getDescription().toLowerCase().contains(text);
     }
 }

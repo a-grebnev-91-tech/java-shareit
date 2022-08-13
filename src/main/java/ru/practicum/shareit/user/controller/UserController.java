@@ -42,7 +42,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public UserDto patchUser(@PathVariable("id") long id, @RequestBody @Valid UserPatchDto user) {
-        log.info("Updating user with id {}", id);
+        log.info("Updating user with id {} by {}", id, user);
         return service.patchUser(id, user);
     }
 }

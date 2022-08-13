@@ -11,13 +11,15 @@ import ru.practicum.shareit.user.mapper.UserReferenceMapper;
 @Mapper(componentModel = "spring", uses = {UserReferenceMapper.class})
 public interface ItemMapper {
     @Mapping(source = "ownerId", target = "owner")
-    ItemModel requestToModel(ItemRequest dto);
-
-    @Mapping(source = "ownerId", target = "owner")
     ItemModel entityToModel(Item entity);
 
-    ItemResponse modelToResponse(ItemModel model);
+    ItemResponse entityToResponse(Item entity);
 
     @Mapping(source = "owner", target = "ownerId")
     Item modelToEntity(ItemModel model);
+
+    ItemResponse modelToResponse(ItemModel model);
+
+    @Mapping(source = "ownerId", target = "owner")
+    ItemModel requestToModel(ItemRequest dto);
 }

@@ -14,6 +14,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.practicum.shareit.exception.ConflictEmailException;
+import ru.practicum.shareit.exception.ForbiddenOperationException;
 import ru.practicum.shareit.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         Map<String, Object> body = getGeneralErrorBody(HttpStatus.CONFLICT, request);
         body.put(REASONS, ex.getMessage());
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(value = ForbiddenOperationException.class)
+    protected ResponseEntity<Object> handleNotFound(ForbiddenOperationException ex, WebRequest request) {
+        log.warn(ex.getMessage());
+        Map<String, Object> body = getGeneralErrorBody(HttpStatus.FORBIDDEN, request);
+        body.put(REASONS, ex.getMessage());
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 
     @ExceptionHandler(value = MissingRequestHeaderException.class)

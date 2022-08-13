@@ -13,4 +13,23 @@ public class UserPatchDto {
     @Email(message = "Email should be valid email")
     @UniqueEmail
     private String email;
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("UserPatchDto{");
+        if (name != null) {
+            builder.append("name='");
+            builder.append(name);
+            builder.append('\'');
+            builder.append(", ");
+        }
+        if (email != null) {
+            builder.append("email='");
+            builder.append(email);
+            builder.append('\'');
+            builder.append(", ");
+        }
+        builder.append("}");
+        return builder.toString();
+    }
 }
