@@ -11,6 +11,10 @@
 		<metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
 	</module>
 	<module name="TreeWalker">
+		<module name="SuppressionFilter">
+			<property name="file" value="suppressions.xml"/>
+			<property name="optional" value="false"/>
+		</module>
 		<module name="IllegalImport">
 			<property name="regexp" value="true"/>
 			<property name="illegalPkgs" value=".*\.shaded\..*"/>
