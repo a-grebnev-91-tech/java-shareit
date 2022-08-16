@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class Patcher {
     private final ObjectMapper objMapper;
 
-    public Patcher(){
+    public Patcher() {
         this.objMapper = new ObjectMapper();
         objMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
