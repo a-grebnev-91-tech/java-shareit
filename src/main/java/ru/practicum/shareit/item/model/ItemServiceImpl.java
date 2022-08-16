@@ -40,7 +40,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemResponse> getAllByUser(long userId) {
         getUserOrThrow(userId);
-        return itemRepository.getAllByUser(userId).stream().map(itemMapper::entityToResponse).collect(Collectors.toList());
+        return itemRepository.getAllByUser(userId)
+                .stream()
+                .map(itemMapper::entityToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
