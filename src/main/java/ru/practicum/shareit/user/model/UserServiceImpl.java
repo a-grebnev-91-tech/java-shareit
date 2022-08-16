@@ -3,13 +3,13 @@ package ru.practicum.shareit.user.model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.PatchException;
 import ru.practicum.shareit.user.controller.UserPatchDto;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.controller.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.util.Patcher;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,11 +18,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
-    private final UserMapper mapper;
+    private final UserMapper userMapper;
+    private final Patcher patcher;
+
 
     @Override
     public UserDto createUser(UserDto user) {
-        return mapper.toDto(repository.createUser(mapper.toModel(user)));
+        return userMapper.toDto(repository.createUser(userMapper.toModel(user)));
     }
 
     @Override
@@ -34,13 +36,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAll() {
         List<User> users = repository.getAll();
-        return users.stream().map(mapper::toDto).collect(Collectors.toList());
+        return users.stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public UserDto getUser(long id) {
         Optional<User> user = repository.getUser(id);
-        return mapper.toDto(
+        return userMapper.toDto(
                 user.orElseThrow(
                         () -> new NotFoundException(String.format("User with id %d isn't exist", id))
                 )
@@ -50,26 +52,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto patchUser(long userId, UserPatchDto patch) {
         User existingUser = getUserOrThrow(userId);
-        Arrays.stream(patch.getClass().getDeclaredFields())
-                .peek(field -> field.setAccessible(true))
-                .filter(field -> {
-                    try {
-                        return field.get(patch) != null;
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(Collectors.toList())
-                .forEach(fieldToPatch -> {
-                    try {
-                        Field existingUserField = existingUser.getClass().getDeclaredField(fieldToPatch.getName());
-                        existingUserField.setAccessible(true);
-                        existingUserField.set(existingUser, fieldToPatch.get(patch));
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-        return mapper.toDto(repository.updateUser(existingUser));
+        if (patcher.patch(existingUser, patch)) {
+            return userMapper.toDto(repository.updateUser(existingUser));
+        } else {
+            throw new PatchException(String.format("Patch %s couldn't be applied on %s", patch, existingUser));
+        }
     }
 
     private User getUserOrThrow(long userId) {

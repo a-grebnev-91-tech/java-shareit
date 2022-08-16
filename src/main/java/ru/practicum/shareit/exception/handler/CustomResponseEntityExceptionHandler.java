@@ -1,5 +1,6 @@
 package ru.practicum.shareit.exception.handler;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import ru.practicum.shareit.exception.ConflictEmailException;
 import ru.practicum.shareit.exception.ForbiddenOperationException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.PatchException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.OffsetDateTime;
@@ -36,15 +38,15 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(value = ConflictEmailException.class)
     protected ResponseEntity<Object> handleConflictEmail(ConflictEmailException ex, WebRequest request) {
-        log.warn(ex.getMessage());
+        log.warn("Email conflict: {}", ex.getMessage());
         Map<String, Object> body = getGeneralErrorBody(HttpStatus.CONFLICT, request);
         body.put(REASONS, ex.getMessage());
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(value = ForbiddenOperationException.class)
-    protected ResponseEntity<Object> handleNotFound(ForbiddenOperationException ex, WebRequest request) {
-        log.warn(ex.getMessage());
+    protected ResponseEntity<Object> handleForbiddenOperation(ForbiddenOperationException ex, WebRequest request) {
+        log.warn("Forbidden operation error: {}", ex.getMessage());
         Map<String, Object> body = getGeneralErrorBody(HttpStatus.FORBIDDEN, request);
         body.put(REASONS, ex.getMessage());
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
@@ -52,7 +54,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(value = MissingRequestHeaderException.class)
     protected ResponseEntity<Object> handleMissingRequestHeader(MissingRequestHeaderException ex, WebRequest request) {
-        log.warn(ex.getMessage());
+        log.warn("Missing request header error: {}", ex.getMessage());
         Map<String, Object> body = getGeneralErrorBody(HttpStatus.BAD_REQUEST, request);
         body.put(REASONS, ex.getMessage());
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
@@ -67,11 +69,12 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     }
 
     @Override
+    @NonNull
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
-            HttpHeaders headers,
-            HttpStatus status,
-            WebRequest request
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatus status,
+            @NonNull WebRequest request
     ) {
         log.warn("Not Valid. Massege: {}", ex.getMessage());
         Map<String, Object> body = getGeneralErrorBody(status, request);
@@ -82,6 +85,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
                 .collect(Collectors.toList());
         body.put(REASONS, errors);
         return new ResponseEntity<>(body, headers, status);
+    }
+
+    @ExceptionHandler(value = PatchException.class)
+    protected ResponseEntity<Object> handlePatchException(PatchException ex, WebRequest request) {
+        log.warn("Patch error: {}", ex.getMessage());
+        Map<String, Object> body = getGeneralErrorBody(HttpStatus.NOT_FOUND, request);
+        body.put(REASONS, ex.getMessage());
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     private Map<String, Object> getGeneralErrorBody(HttpStatus status, WebRequest request) {

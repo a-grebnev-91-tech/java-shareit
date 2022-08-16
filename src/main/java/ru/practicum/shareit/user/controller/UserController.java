@@ -31,7 +31,7 @@ public class UserController {
     @GetMapping
     public List<UserDto> getAll() {
         log.info("Obtaining all users");
-        return  service.getAll();
+        return service.getAll();
     }
 
     @GetMapping("/{id}")

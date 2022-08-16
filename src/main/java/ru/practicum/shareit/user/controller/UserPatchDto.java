@@ -16,14 +16,17 @@ public class UserPatchDto {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("UserPatchDto{");
+        String header = "UserPatchDto{";
+        StringBuilder builder = new StringBuilder(header);
         if (name != null) {
             builder.append("name='");
             builder.append(name);
             builder.append('\'');
-            builder.append(", ");
         }
         if (email != null) {
+            if (builder.length() > header.length()) {
+                builder.append(", ");
+            }
             builder.append("email='");
             builder.append(email);
             builder.append('\'');

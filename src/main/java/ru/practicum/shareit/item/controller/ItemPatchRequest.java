@@ -16,24 +16,25 @@ public class ItemPatchRequest {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("ItemPatchRequest{");
+        String header = "ItemPatchRequest{";
+        StringBuilder builder = new StringBuilder(header);
         if (name != null) {
             builder.append("name='");
             builder.append(name);
             builder.append('\'');
-            builder.append(", ");
         }
         if (description != null) {
+            if (builder.length() > header.length()) {
+                builder.append(", ");
+            }
             builder.append("description='");
             builder.append(description);
             builder.append('\'');
-            builder.append(", ");
         }
         if (available != null) {
-            builder.append("available='");
+            builder.append(", available='");
             builder.append(available);
             builder.append('\'');
-            builder.append(", ");
         }
         builder.append("}");
         return builder.toString();

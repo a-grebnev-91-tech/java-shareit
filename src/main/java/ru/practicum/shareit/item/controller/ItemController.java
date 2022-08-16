@@ -29,7 +29,7 @@ public class ItemController {
     @GetMapping
     public List<ItemResponse> getAll(@RequestHeader(value = USER_ID_HEADER) long userId) {
         log.info("Obtaining all items");
-        return  service.getAllByUser(userId);
+        return service.getAllByUser(userId);
     }
 
     @GetMapping("/{id}")

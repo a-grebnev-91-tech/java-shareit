@@ -7,7 +7,6 @@ import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 
 @Component
 public class UserReferenceMapper {
@@ -19,10 +18,9 @@ public class UserReferenceMapper {
     }
 
     public User map(@NotNull Long id) {
-        Optional<User> user = repo.getUser(id);
-        if (user.isEmpty())
-            throw new NotFoundException(String.format("User with id %d isn't exist", id));
-        return user.get();
+        return repo.getUser(id).orElseThrow(
+                () -> new NotFoundException(String.format("User with id %d isn't exist", id))
+        );
     }
 
     public Long map(@NotNull User user) {
