@@ -1,9 +1,9 @@
 package ru.practicum.shareit.user.controller;
 
 import lombok.*;
-import ru.practicum.shareit.validation.groups.CreateInfo;
-import ru.practicum.shareit.validation.groups.PatchInfo;
-import ru.practicum.shareit.validation.UniqueEmail;
+import ru.practicum.shareit.util.validation.groups.CreateInfo;
+import ru.practicum.shareit.util.validation.groups.PatchInfo;
+import ru.practicum.shareit.util.validation.UniqueEmail;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

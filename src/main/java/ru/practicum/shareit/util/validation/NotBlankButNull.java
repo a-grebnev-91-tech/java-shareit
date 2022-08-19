@@ -1,4 +1,4 @@
-package ru.practicum.shareit.validation;
+package ru.practicum.shareit.util.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -10,9 +10,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({METHOD, FIELD, ANNOTATION_TYPE, TYPE_USE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = UniqueEmailValidator.class)
-public @interface UniqueEmail {
-    String message() default "Email should be unique";
+@Constraint(validatedBy = NotBlankButNullValidator.class)
+public @interface NotBlankButNull {
+    String message() default "Field should not be blank";
 
     Class<?>[] groups() default {};
 

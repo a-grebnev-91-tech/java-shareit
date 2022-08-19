@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.shareit.item.controller.ItemRequest;
 import ru.practicum.shareit.item.controller.ItemResponse;
-import ru.practicum.shareit.item.dao.Item;
+import ru.practicum.shareit.item.repository.Item;
 import ru.practicum.shareit.item.model.ItemModel;
 import ru.practicum.shareit.user.mapper.UserReferenceMapper;
 

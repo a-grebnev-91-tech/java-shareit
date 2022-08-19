@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.dao;
+package ru.practicum.shareit.item.repository;
 
 import java.util.List;
 import java.util.Optional;

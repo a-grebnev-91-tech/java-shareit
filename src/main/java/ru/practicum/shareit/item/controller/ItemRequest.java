@@ -2,9 +2,9 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.validation.NotBlankButNull;
-import ru.practicum.shareit.validation.groups.CreateInfo;
-import ru.practicum.shareit.validation.groups.PatchInfo;
+import ru.practicum.shareit.util.validation.NotBlankButNull;
+import ru.practicum.shareit.util.validation.groups.CreateInfo;
+import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

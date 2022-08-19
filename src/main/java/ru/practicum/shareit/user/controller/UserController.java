@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.model.UserService;
-import ru.practicum.shareit.validation.groups.CreateInfo;
-import ru.practicum.shareit.validation.groups.PatchInfo;
+import ru.practicum.shareit.util.validation.groups.CreateInfo;
+import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
 import java.util.List;
 

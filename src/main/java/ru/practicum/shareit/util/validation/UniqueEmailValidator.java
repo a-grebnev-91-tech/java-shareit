@@ -1,9 +1,9 @@
-package ru.practicum.shareit.validation;
+package ru.practicum.shareit.util.validation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.practicum.shareit.exception.ConflictEmailException;
-import ru.practicum.shareit.user.dao.UserRepository;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

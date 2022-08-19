@@ -8,10 +8,10 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
 import ru.practicum.shareit.item.controller.ItemRequest;
 import ru.practicum.shareit.item.controller.ItemResponse;
-import ru.practicum.shareit.item.dao.Item;
-import ru.practicum.shareit.item.dao.ItemRepository;
+import ru.practicum.shareit.item.repository.Item;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.mapper.ItemMapper;
-import ru.practicum.shareit.user.dao.UserRepository;
+import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.Patcher;
 

@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.model.ItemService;
-import ru.practicum.shareit.validation.groups.CreateInfo;
-import ru.practicum.shareit.validation.groups.PatchInfo;
+import ru.practicum.shareit.util.validation.groups.CreateInfo;
+import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
 import java.util.List;
 
