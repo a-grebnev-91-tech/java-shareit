@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ForbiddenOperationException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
-import ru.practicum.shareit.item.controller.ItemPatchRequest;
 import ru.practicum.shareit.item.controller.ItemRequest;
 import ru.practicum.shareit.item.controller.ItemResponse;
 import ru.practicum.shareit.item.dao.Item;
@@ -54,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponse patchItem(long userId, long itemId, ItemPatchRequest patch) {
+    public ItemResponse patchItem(long userId, long itemId, ItemRequest patch) {
         getUserOrThrow(userId);
         Item existingItem = getItemOrThrow(itemId);
         if (existingItem.getOwnerId() != userId) {

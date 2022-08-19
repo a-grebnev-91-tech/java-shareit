@@ -3,10 +3,12 @@ package ru.practicum.shareit.user.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.model.UserService;
+import ru.practicum.shareit.validation.groups.CreateInfo;
+import ru.practicum.shareit.validation.groups.PatchInfo;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -17,7 +19,7 @@ public class UserController {
     private final UserService service;
 
     @PostMapping
-    public UserDto createUser(@RequestBody @Valid UserDto user) {
+    public UserDto createUser(@RequestBody @Validated(CreateInfo.class) UserDto user) {
         log.info("Creating user {}", user);
         return service.createUser(user);
     }
@@ -41,7 +43,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserDto patchUser(@PathVariable("id") long id, @RequestBody @Valid UserPatchDto user) {
+    public UserDto patchUser(@PathVariable("id") long id, @RequestBody @Validated(PatchInfo.class) UserDto user) {
         log.info("Updating user with id {} by {}", id, user);
         return service.patchUser(id, user);
     }

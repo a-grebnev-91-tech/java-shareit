@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.model;
 
-import ru.practicum.shareit.item.controller.ItemPatchRequest;
 import ru.practicum.shareit.item.controller.ItemRequest;
 import ru.practicum.shareit.item.controller.ItemResponse;
 
@@ -13,7 +12,7 @@ public interface ItemService {
 
     ItemResponse getItem(long id);
 
-    ItemResponse patchItem(long userId, long itemId, ItemPatchRequest patchRequest);
+    ItemResponse patchItem(long userId, long itemId, ItemRequest patchRequest);
 
     List<ItemResponse> searchItem(String text);
 }

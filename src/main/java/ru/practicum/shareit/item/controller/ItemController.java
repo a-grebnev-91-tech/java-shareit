@@ -2,10 +2,12 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.model.ItemService;
+import ru.practicum.shareit.validation.groups.CreateInfo;
+import ru.practicum.shareit.validation.groups.PatchInfo;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -20,7 +22,7 @@ public class ItemController {
     @PostMapping
     public ItemResponse createItem(
             @RequestHeader(value = USER_ID_HEADER) long userId,
-            @RequestBody @Valid ItemRequest dto
+            @RequestBody @Validated(CreateInfo.class) ItemRequest dto
     ) {
         log.info("Creating user {}", dto);
         return service.createItem(userId, dto);
@@ -42,7 +44,7 @@ public class ItemController {
     public ItemResponse patchItem(
             @RequestHeader(value = USER_ID_HEADER) long userId,
             @PathVariable("itemId") long itemId,
-            @RequestBody ItemPatchRequest patchRequest
+            @RequestBody @Validated(PatchInfo.class) ItemRequest patchRequest
     ) {
         log.info("User with id {} updating {}", userId, patchRequest);
         return service.patchItem(userId, itemId, patchRequest);

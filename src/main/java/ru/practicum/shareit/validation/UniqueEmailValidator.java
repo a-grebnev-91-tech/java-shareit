@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.validation;
+package ru.practicum.shareit.validation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

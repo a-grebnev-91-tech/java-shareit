@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
-import ru.practicum.shareit.user.controller.UserPatchDto;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.controller.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -50,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto patchUser(long userId, UserPatchDto patch) {
+    public UserDto patchUser(long userId, UserDto patch) {
         User existingUser = getUserOrThrow(userId);
         if (patcher.patch(existingUser, patch)) {
             return userMapper.toDto(repository.updateUser(existingUser));
