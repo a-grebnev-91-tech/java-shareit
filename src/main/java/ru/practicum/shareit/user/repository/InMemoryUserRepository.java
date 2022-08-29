@@ -5,7 +5,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
 
-@Repository
+@Repository("InMemory")
 public class InMemoryUserRepository implements UserRepository {
     private long currentId;
     private final Map<Long, User> users;
@@ -16,40 +16,47 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User createUser(User user) {
+    public User save(User user) {
+        if (users.containsKey(user.getId())) {
+            return update(user);
+        } else {
+            return create(user);
+        }
+    }
+
+    @Override
+    public Optional<User> deleteById(long id) {
+        return Optional.ofNullable(users.remove(id));
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return users.values().stream().filter(user -> user.getEmail().equals(email)).findFirst();
+    }
+
+    @Override
+    public List<User> findAll() {
+        return new ArrayList<>(users.values());
+    }
+
+    @Override
+    public Optional<User> findById(long id) {
+        return Optional.ofNullable(users.get(id));
+    }
+
+    private User create(User user) {
         long id = generateId();
         user.setId(id);
         users.put(id, user);
         return user;
     }
 
-    @Override
-    public Optional<User> deleteUser(long id) {
-        return Optional.ofNullable(users.remove(id));
-    }
-
-    @Override
-    public Optional<User> getByEmail(String email) {
-        return users.values().stream().filter(user -> user.getEmail().equals(email)).findFirst();
-    }
-
-    @Override
-    public List<User> getAll() {
-        return new ArrayList<>(users.values());
-    }
-
-    @Override
-    public Optional<User> getUser(long id) {
-        return Optional.ofNullable(users.get(id));
-    }
-
-    @Override
-    public User updateUser(User user) {
-        users.put(user.getId(), user);
-        return user;
-    }
-
     private long generateId() {
         return currentId++;
+    }
+
+    private User update(User user) {
+        users.put(user.getId(), user);
+        return user;
     }
 }

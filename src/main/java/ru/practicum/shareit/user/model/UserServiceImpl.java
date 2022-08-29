@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.model;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
@@ -16,31 +17,35 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    @Qualifier("InMemory")
     private final UserRepository repository;
     private final UserMapper userMapper;
     private final Patcher patcher;
 
-
     @Override
     public UserDto createUser(UserDto user) {
-        return userMapper.toDto(repository.createUser(userMapper.toModel(user)));
+        User model = userMapper.toModel(user);
+        model = repository.save(model);
+        System.out.println(model.getId());
+        user = userMapper.toDto(model);
+        return user;
     }
 
     @Override
     public void deleteUser(long id) {
         getUserOrThrow(id);
-        repository.deleteUser(id);
+        repository.deleteById(id);
     }
 
     @Override
     public List<UserDto> getAll() {
-        List<User> users = repository.getAll();
+        List<User> users = repository.findAll();
         return users.stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public UserDto getUser(long id) {
-        Optional<User> user = repository.getUser(id);
+        Optional<User> user = repository.findById(id);
         return userMapper.toDto(
                 user.orElseThrow(
                         () -> new NotFoundException(String.format("User with id %d isn't exist", id))
@@ -52,14 +57,14 @@ public class UserServiceImpl implements UserService {
     public UserDto patchUser(long userId, UserDto patch) {
         User existingUser = getUserOrThrow(userId);
         if (patcher.patch(existingUser, patch)) {
-            return userMapper.toDto(repository.updateUser(existingUser));
+            return userMapper.toDto(repository.save(existingUser));
         } else {
             throw new PatchException(String.format("Patch %s couldn't be applied on %s", patch, existingUser));
         }
     }
 
     private User getUserOrThrow(long userId) {
-        Optional<User> user = repository.getUser(userId);
+        Optional<User> user = repository.findById(userId);
         return user.orElseThrow(() -> new NotFoundException(String.format("User with id %d isn't exist", userId)));
     }
 }

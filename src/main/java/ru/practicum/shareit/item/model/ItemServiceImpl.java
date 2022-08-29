@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.model;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ForbiddenOperationException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
+    @Qualifier("InMemory")
     private final UserRepository userRepository;
     private final ItemMapper itemMapper;
     private final Patcher patcher;
@@ -81,7 +83,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private User getUserOrThrow(long userId) {
-        Optional<User> user = userRepository.getUser(userId);
+        Optional<User> user = userRepository.findById(userId);
         return user.orElseThrow(() -> new NotFoundException(String.format("User with id %d isn't exist", userId)));
     }
 }
