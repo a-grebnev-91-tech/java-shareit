@@ -9,7 +9,6 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
 import ru.practicum.shareit.item.controller.ItemRequest;
 import ru.practicum.shareit.item.controller.ItemResponse;
-import ru.practicum.shareit.item.repository.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -33,9 +32,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemResponse createItem(long userId, ItemRequest dto) {
         dto.setOwnerId(userId);
-        ItemModel model = itemMapper.requestToModel(dto);
-        Item entity = itemRepository.createItem(itemMapper.modelToEntity(model));
-        return itemMapper.entityToResponse(entity);
+        return itemMapper.toResponse(itemRepository.createItem(itemMapper.toModel(dto)));
     }
 
     @Override
@@ -43,37 +40,37 @@ public class ItemServiceImpl implements ItemService {
         getUserOrThrow(userId);
         return itemRepository.getAllByUser(userId)
                 .stream()
-                .map(itemMapper::entityToResponse)
+                .map(itemMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ItemResponse getItem(long id) {
-        return itemMapper.entityToResponse(itemRepository.getItem(id).orElseThrow(
+        return itemMapper.toResponse(itemRepository.getItem(id).orElseThrow(
                 () -> new NotFoundException(String.format("Item with id %d isn't exist", id))
         ));
     }
 
     @Override
     public ItemResponse patchItem(long userId, long itemId, ItemRequest patch) {
-        getUserOrThrow(userId);
         Item existingItem = getItemOrThrow(itemId);
-        if (existingItem.getOwnerId() != userId) {
+        if (isItemBelongToUser(existingItem, userId)) {
+            if (patcher.patch(existingItem, patch)) {
+                return itemMapper.toResponse(itemRepository.updateItem(existingItem));
+            } else {
+                throw new PatchException(String.format("Patch %s couldn't be applied on %s", patch, existingItem));
+            }
+        } else {
             throw new ForbiddenOperationException(
                     String.format("User with id %d could not change item with id %d", userId, existingItem.getId())
             );
-        }
-        if (patcher.patch(existingItem, patch)) {
-            return itemMapper.entityToResponse(itemRepository.updateItem(existingItem));
-        } else {
-            throw new PatchException(String.format("Patch %s couldn't be applied on %s", patch, existingItem));
         }
     }
 
     @Override
     public List<ItemResponse> searchItem(String text) {
         List<Item> founded = itemRepository.searchItem(text);
-        return founded.stream().map(itemMapper::entityToResponse).collect(Collectors.toList());
+        return founded.stream().map(itemMapper::toResponse).collect(Collectors.toList());
     }
 
     private Item getItemOrThrow(long itemId) {
@@ -85,5 +82,10 @@ public class ItemServiceImpl implements ItemService {
     private User getUserOrThrow(long userId) {
         Optional<User> user = userRepository.findById(userId);
         return user.orElseThrow(() -> new NotFoundException(String.format("User with id %d isn't exist", userId)));
+    }
+
+    private boolean isItemBelongToUser(Item existingItem, long userId) {
+        getUserOrThrow(userId);
+        return existingItem.getOwner().getId().equals(userId);
     }
 }

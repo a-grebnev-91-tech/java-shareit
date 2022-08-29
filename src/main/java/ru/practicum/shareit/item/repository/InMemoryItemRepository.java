@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.repository;
 
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class InMemoryItemRepository implements ItemRepository {
 
     @Override
     public List<Item> getAllByUser(long userId) {
-        return items.values().stream().filter(item -> item.getOwnerId() == userId).collect(Collectors.toList());
+        return items.values().stream().filter(item -> item.getOwner().getId() == userId).collect(Collectors.toList());
     }
 
     @Override
