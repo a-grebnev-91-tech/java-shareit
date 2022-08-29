@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Component
 @RequiredArgsConstructor
 public class UserReferenceMapper {
-    @Qualifier("InMemory")
+    @Qualifier("InDb")
     private final UserRepository repo;
 
     public User map(@NotNull Long id) {

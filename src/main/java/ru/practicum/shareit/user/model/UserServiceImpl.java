@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Qualifier("InMemory")
+    @Qualifier("InDb")
     private final UserRepository repository;
     private final UserMapper userMapper;
     private final Patcher patcher;

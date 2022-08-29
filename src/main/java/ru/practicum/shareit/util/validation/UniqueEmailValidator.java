@@ -11,7 +11,7 @@ import javax.validation.ConstraintValidatorContext;
 
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
-    @Qualifier("InMemory")
+    @Qualifier("InDb")
     private final UserRepository repository;
 
     @Override

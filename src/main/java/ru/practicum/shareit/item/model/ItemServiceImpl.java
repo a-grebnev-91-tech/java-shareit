@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
-    @Qualifier("InMemory")
+    @Qualifier("InDb")
     private final UserRepository userRepository;
     private final ItemMapper itemMapper;
     private final Patcher patcher;
