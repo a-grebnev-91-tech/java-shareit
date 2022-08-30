@@ -19,7 +19,7 @@ public class UserDto {
     private String name;
     @NotNull(groups = CreateInfo.class, message = "email should not be null")
     @Email(groups = {CreateInfo.class, PatchInfo.class}, message = "email should be valid email address")
-    @UniqueEmail(groups = {CreateInfo.class, PatchInfo.class})
+//    @UniqueEmail(groups = {CreateInfo.class, PatchInfo.class}) // constraint passed to database for postman tests
     private String email;
 
     @Override
