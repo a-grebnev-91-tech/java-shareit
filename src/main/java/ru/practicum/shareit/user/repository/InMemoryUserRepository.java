@@ -5,7 +5,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
 
-@Repository("InMemory")
+@Repository("InMemoryUsers")
 public class InMemoryUserRepository implements UserRepository {
     private long currentId;
     private final Map<Long, User> users;

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Qualifier("InDb")
+    @Qualifier("InDbUsers")
     private final UserRepository repository;
     private final UserMapper userMapper;
     private final Patcher patcher;
@@ -26,7 +26,6 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto user) {
         User model = userMapper.toModel(user);
         model = repository.save(model);
-        System.out.println(model.getId());
         user = userMapper.toDto(model);
         return user;
     }

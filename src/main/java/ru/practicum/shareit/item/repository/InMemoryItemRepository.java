@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Repository
+@Repository("InMemoryItems")
 public class InMemoryItemRepository implements ItemRepository {
     private long currentId;
     private final Map<Long, Item> items;
@@ -17,34 +17,36 @@ public class InMemoryItemRepository implements ItemRepository {
     }
 
     @Override
-    public Item createItem(Item item) {
-        long id = generateId();
-        item.setId(id);
-        items.put(id, item);
-        return item;
+    public Item save(Item item) {
+        if (items.containsKey(item.getId())) {
+            return update(item);
+        } else {
+            return createItem(item);
+        }
     }
 
     @Override
-    public List<Item> getAllByUser(long userId) {
-        return items.values().stream().filter(item -> item.getOwner().getId() == userId).collect(Collectors.toList());
+    public List<Item> findAllByOwnerId(long ownerId) {
+        return items.values().stream().filter(item -> item.getOwner().getId() == ownerId).collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Item> getItem(long itemId) {
+    public Optional<Item> findById(long itemId) {
         return Optional.ofNullable(items.get(itemId));
     }
 
     @Override
-    public List<Item> searchItem(String text) {
+    public List<Item> findByNameAndDescription(String text) {
         return items.values()
                 .stream()
                 .filter(item -> item.isAvailable() && isItemSuitForText(item, text))
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Item updateItem(Item item) {
-        items.put(item.getId(), item);
+    private Item createItem(Item item) {
+        long id = generateId();
+        item.setId(id);
+        items.put(id, item);
         return item;
     }
 
@@ -53,9 +55,12 @@ public class InMemoryItemRepository implements ItemRepository {
     }
 
     private boolean isItemSuitForText(Item item, String text) {
-        if (text.isBlank())
-            return false;
         text = text.toLowerCase();
         return item.getName().toLowerCase().contains(text) || item.getDescription().toLowerCase().contains(text);
+    }
+
+    private Item update(Item item) {
+        items.put(item.getId(), item);
+        return item;
     }
 }
