@@ -5,4 +5,6 @@ import ru.practicum.shareit.booking.controller.dto.BookingResponse;
 
 public interface BookingService {
     BookingResponse createBooking(BookingRequest request, Long userId);
+
+    BookingResponse approveBooking(Long bookingId, Long userId, boolean approved);
 }
