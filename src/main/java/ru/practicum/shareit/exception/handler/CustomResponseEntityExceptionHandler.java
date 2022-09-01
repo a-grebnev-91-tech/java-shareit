@@ -18,6 +18,7 @@ import ru.practicum.shareit.exception.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         Map<String, Object> body = getGeneralErrorBody(HttpStatus.NOT_FOUND, request);
         body.put(REASONS, ex.getMessage());
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+     @ExceptionHandler(value = BookingStateIsNotSupportedException.class)
+     protected ResponseEntity<Object> handleBookingStateIsNotSupported(BookingStateIsNotSupportedException ex, WebRequest request) {
+        log.warn("Booking state not supported error: {}", ex.getMessage());
+        Map<String, Object> body = new HashMap<>(1);
+        body.put("error", ex.getMessage());
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @Override

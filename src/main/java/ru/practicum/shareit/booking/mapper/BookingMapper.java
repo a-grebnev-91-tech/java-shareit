@@ -11,6 +11,9 @@ import ru.practicum.shareit.item.mapper.ItemReferenceMapper;
 import ru.practicum.shareit.user.mapper.UserReferenceMapper;
 import ru.practicum.shareit.user.model.User;
 
+import java.awt.print.Book;
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         uses = {UserReferenceMapper.class, ItemReferenceMapper.class})
 public interface BookingMapper {
@@ -20,10 +23,5 @@ public interface BookingMapper {
 
     BookingResponse toResponse(Booking model);
 
-//    @Named("test")
-//    public static Booker toBooker(User user) {
-//        Booker booker = new Booker();
-//        booker.setId(user.getId());
-//        booker.set
-//    }
+    List<BookingResponse> toResponse(List<Booking> modelList);
 }

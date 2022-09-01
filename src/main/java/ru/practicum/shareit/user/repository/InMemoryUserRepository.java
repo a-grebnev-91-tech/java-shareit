@@ -30,6 +30,11 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
+    public boolean existsById(long id) {
+        return users.containsKey(id);
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         return users.values().stream().filter(user -> user.getEmail().equals(email)).findFirst();
     }

@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.controller.dto.BookingRequest;
 import ru.practicum.shareit.booking.controller.dto.BookingResponse;
 import ru.practicum.shareit.booking.model.BookingService;
+import ru.practicum.shareit.booking.model.BookingsState;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static ru.practicum.shareit.util.Сonstant.USER_ID_HEADER;
 
@@ -27,13 +30,21 @@ public class BookingController {
         return service.createBooking(dto, bookerId);
     }
 
-//    GET /bookings/{bookingId}
     @GetMapping("{bookingId}")
     public BookingResponse getBooking(
             @PathVariable("bookingId") Long bookingId,
             @RequestHeader(USER_ID_HEADER) Long userId) {
         log.info("Attempt to get booking with id {} by user with id {}", bookingId, userId);
         return service.getBooking(bookingId, userId);
+    }
+
+//    GET /bookings?state={state}
+    @GetMapping
+    public List<BookingResponse> getAllByBooker(
+            @RequestHeader(USER_ID_HEADER) Long userId,
+            @RequestParam(value = "state", defaultValue = "ALL") String state) {
+        log.info("User with id {} attempt to get all his bookings", userId);
+        return service.getAllBookingsByBooker(userId, state);
     }
 
     @PatchMapping("{bookingId}")
