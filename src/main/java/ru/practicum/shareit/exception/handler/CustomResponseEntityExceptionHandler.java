@@ -49,9 +49,9 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 
-    @ExceptionHandler(value = ItemNotAvailableException.class)
-    protected ResponseEntity<Object> handleItemNotAvailable(ItemNotAvailableException ex, WebRequest request) {
-        log.warn("Item not available error: {}", ex.getMessage());
+    @ExceptionHandler(value = NotAvailableException.class)
+    protected ResponseEntity<Object> handleItemNotAvailable(NotAvailableException ex, WebRequest request) {
+        log.warn("Not available error: {}", ex.getMessage());
         Map<String, Object> body = getGeneralErrorBody(HttpStatus.BAD_REQUEST, request);
         body.put(REASONS, ex.getMessage());
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);

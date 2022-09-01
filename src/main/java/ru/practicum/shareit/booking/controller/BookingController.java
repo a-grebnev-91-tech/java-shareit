@@ -27,6 +27,15 @@ public class BookingController {
         return service.createBooking(dto, bookerId);
     }
 
+//    GET /bookings/{bookingId}
+    @GetMapping("{bookingId}")
+    public BookingResponse getBooking(
+            @PathVariable("bookingId") Long bookingId,
+            @RequestHeader(USER_ID_HEADER) Long userId) {
+        log.info("Attempt to get booking with id {} by user with id {}", bookingId, userId);
+        return service.getBooking(bookingId, userId);
+    }
+
     @PatchMapping("{bookingId}")
     public BookingResponse patchBooking(
             @PathVariable("bookingId") Long bookingId,
