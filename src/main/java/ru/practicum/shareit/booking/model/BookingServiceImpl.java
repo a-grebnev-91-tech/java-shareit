@@ -56,11 +56,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponse> getAllBookingsByBooker(Long bookerId, String state) {
+    public List<BookingResponse> getAllBookingsByBooker(Long bookerId, String state, String sortBy, String order) {
         BookingsState bookingState = convertToBookingState(state);
         checkUserExisting(bookerId);
         List<Booking> bookings;
-        Sort sort = Sort.by(Sort.Direction.DESC, "start");
+        Sort sort = Sort.by(Sort.Direction.valueOf(order), sortBy);
         LocalDateTime now = LocalDateTime.now();
         switch (bookingState) {
             case WAITING:
@@ -79,6 +79,36 @@ public class BookingServiceImpl implements BookingService {
                 break;
             case FUTURE:
                 bookings = bookingRepository.findAllByBookerIdAndStartIsAfter(bookerId, now, sort);
+                break;
+            default:
+                bookings = Collections.emptyList();
+        }
+        return mapper.toResponse(bookings);
+    }
+
+    @Override
+    public List<BookingResponse> getAllBookingsByOwner(Long ownerId, String state) {
+        BookingsState bookingState = convertToBookingState(state);
+        checkUserExisting(ownerId);
+        List<Booking> bookings;
+        LocalDateTime now = LocalDateTime.now();
+        switch (bookingState) {
+            case WAITING:
+            case REJECTED:
+                bookings = bookingRepository
+                        .findAllByOwnerIdAndStatus(ownerId, BookingStatus.valueOf(state));
+                break;
+            case ALL:
+                bookings = bookingRepository.findAllByOwnerId(ownerId);
+                break;
+            case PAST:
+                bookings = bookingRepository.findAllByOwnerIdInPast(ownerId, now);
+                break;
+            case CURRENT:
+                bookings = bookingRepository.findAllByOwnerIdCurrent(ownerId, now);
+                break;
+            case FUTURE:
+                bookings = bookingRepository.findAllByOwnerIdInFuture(ownerId, now);
                 break;
             default:
                 bookings = Collections.emptyList();
@@ -117,19 +147,6 @@ public class BookingServiceImpl implements BookingService {
         return booking.orElseThrow(
                 () -> new NotFoundException(String.format("Booking with id %d isn't exist", bookingId))
         );
-    }
-
-    private boolean bookingInFuture(Booking booking) {
-        return booking.getStart().isAfter(LocalDateTime.now());
-    }
-
-    private boolean bookingInPast(Booking booking) {
-        return booking.getEnd().isBefore(LocalDateTime.now());
-    }
-
-    private boolean bookingIsCurrent(Booking booking) {
-        LocalDateTime now = LocalDateTime.now();
-        return booking.getStart().isBefore(now) && booking.getEnd().isAfter(now);
     }
 
     private boolean isBooker(Long userId, Booking booking) {

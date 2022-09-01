@@ -38,13 +38,34 @@ public class BookingController {
         return service.getBooking(bookingId, userId);
     }
 
-//    GET /bookings?state={state}
     @GetMapping
     public List<BookingResponse> getAllByBooker(
             @RequestHeader(USER_ID_HEADER) Long userId,
-            @RequestParam(value = "state", defaultValue = "ALL") String state) {
-        log.info("User with id {} attempt to get all his bookings", userId);
-        return service.getAllBookingsByBooker(userId, state);
+            @RequestParam(value = "state", defaultValue = "ALL") String state,
+            @RequestParam(value = "sortBy", defaultValue = "start") String sortBy,
+            @RequestParam(value = "order", defaultValue = "DESC") String order
+    ) {
+        log.info(
+                "Booker with id {} attempt to get all his bookings with state {} order by {} {}",
+                userId,
+                state,
+                sortBy,
+                order
+        );
+        return service.getAllBookingsByBooker(userId, state, sortBy, order);
+    }
+
+    @GetMapping("owner")
+    public List<BookingResponse> getAllByOwner(
+            @RequestHeader(USER_ID_HEADER) Long userId,
+            @RequestParam(value = "state", defaultValue = "ALL") String state
+    ) {
+        log.info(
+                "Owner with id {} attempt to get all bookings of his items with state {}",
+                userId,
+                state
+        );
+        return service.getAllBookingsByOwner(userId, state);
     }
 
     @PatchMapping("{bookingId}")

@@ -10,7 +10,9 @@ public interface BookingService {
 
     BookingResponse createBooking(BookingRequest request, Long userId);
 
-    List<BookingResponse> getAllBookingsByBooker(Long userId, String state);
+    List<BookingResponse> getAllBookingsByBooker(Long userId, String state, String sortBy, String order);
+
+    List<BookingResponse> getAllBookingsByOwner(Long userId, String state);
 
     BookingResponse getBooking(Long bookingId, Long userId);
 }
