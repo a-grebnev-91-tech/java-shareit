@@ -8,7 +8,6 @@ import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 @Getter
 @Setter
@@ -21,9 +20,8 @@ public class ItemRequest {
     @NotBlank(groups = CreateInfo.class, message = "name should not be blank")
     @NotBlankButNull(groups = PatchInfo.class)
     private String name;
-    @Null(groups = PatchInfo.class)
-    private Long ownerId;
 
+    //todo перевести то стринг в отдельный объект
     @Override
     public String toString() {
         String header = "ItemRequest{";

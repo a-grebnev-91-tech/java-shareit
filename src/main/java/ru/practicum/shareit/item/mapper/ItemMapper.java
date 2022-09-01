@@ -13,5 +13,5 @@ public interface ItemMapper {
     ItemResponse toResponse(Item model);
 
     @Mapping(source = "ownerId", target = "owner")
-    Item toModel(ItemRequest dto);
+    Item toModel(ItemRequest dto, Long ownerId);
 }

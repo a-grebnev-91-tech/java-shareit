@@ -23,4 +23,6 @@ public class Item {
     private User owner;
     @Column(name = "available")
     private boolean available;
+
+    //TODO add requests
 }

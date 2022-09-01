@@ -1,7 +1,6 @@
 package ru.practicum.shareit.util.validation;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import ru.practicum.shareit.exception.ConflictEmailException;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -9,7 +8,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, String> {
     @Qualifier("InDbUsers")
     private final UserRepository repository;

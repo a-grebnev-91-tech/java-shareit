@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ForbiddenOperationException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
@@ -33,8 +34,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponse createItem(long userId, ItemRequest dto) {
-        dto.setOwnerId(userId);
-        return itemMapper.toResponse(itemRepository.save(itemMapper.toModel(dto)));
+        return itemMapper.toResponse(itemRepository.save(itemMapper.toModel(dto, userId)));
     }
 
     @Override

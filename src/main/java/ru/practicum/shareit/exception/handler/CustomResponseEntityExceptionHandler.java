@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.practicum.shareit.exception.ConflictEmailException;
-import ru.practicum.shareit.exception.ForbiddenOperationException;
-import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.PatchException;
+import ru.practicum.shareit.exception.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.OffsetDateTime;
@@ -50,6 +47,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         Map<String, Object> body = getGeneralErrorBody(HttpStatus.FORBIDDEN, request);
         body.put(REASONS, ex.getMessage());
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    }
+
+    @ExceptionHandler(value = ItemNotAvailableException.class)
+    protected ResponseEntity<Object> handleItemNotAvailable(ItemNotAvailableException ex, WebRequest request) {
+        log.warn("Item not available error: {}", ex.getMessage());
+        Map<String, Object> body = getGeneralErrorBody(HttpStatus.BAD_REQUEST, request);
+        body.put(REASONS, ex.getMessage());
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = MissingRequestHeaderException.class)

@@ -10,14 +10,14 @@ import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
 import java.util.List;
 
+import static ru.practicum.shareit.util.Сonstant.USER_ID_HEADER;
+
 @Slf4j
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService service;
-
-    public static final String USER_ID_HEADER = "X-Sharer-User-Id";
 
     @PostMapping
     public ItemResponse createItem(
