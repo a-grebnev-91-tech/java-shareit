@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.model;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.controller.dto.BookingRequest;
 import ru.practicum.shareit.booking.controller.dto.BookingResponse;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -30,6 +31,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingResponse approveBooking(Long bookingId, Long userId, boolean approved) {
         Booking booking = getBookingOrThrow(bookingId);
         if (isOwner(userId, booking) && booking.getStatus() == BookingStatus.WAITING) {

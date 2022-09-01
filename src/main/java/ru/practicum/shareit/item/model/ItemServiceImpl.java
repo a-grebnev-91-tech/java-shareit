@@ -54,6 +54,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public ItemResponse patchItem(long userId, long itemId, ItemRequest patch) {
         Item existingItem = getItemOrThrow(itemId);
         if (isItemBelongToUser(existingItem, userId)) {

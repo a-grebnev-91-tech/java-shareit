@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -50,6 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto patchUser(long userId, UserDto patch) {
         User existingUser = getUserOrThrow(userId);
         if (patcher.patch(existingUser, patch)) {
