@@ -35,37 +35,32 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ExceptionHandler(value = ConflictEmailException.class)
     protected ResponseEntity<Object> handleConflictEmail(ConflictEmailException ex, WebRequest request) {
         log.warn("Email conflict: {}", ex.getMessage());
-        HttpStatus status = HttpStatus.CONFLICT;
-        return getResponseEntity(ex, request, status);
+        return getResponseEntity(ex, request, HttpStatus.CONFLICT);
 
     }
 
     @ExceptionHandler(value = ForbiddenOperationException.class)
     protected ResponseEntity<Object> handleForbiddenOperation(ForbiddenOperationException ex, WebRequest request) {
         log.warn("Forbidden operation error: {}", ex.getMessage());
-        HttpStatus status = HttpStatus.FORBIDDEN;
-        return getResponseEntity(ex, request, status);
+        return getResponseEntity(ex, request, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = NotAvailableException.class)
     protected ResponseEntity<Object> handleItemNotAvailable(NotAvailableException ex, WebRequest request) {
         log.warn("Not available error: {}", ex.getMessage());
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        return getResponseEntity(ex, request, status);
+        return getResponseEntity(ex, request, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = MissingRequestHeaderException.class)
     protected ResponseEntity<Object> handleMissingRequestHeader(MissingRequestHeaderException ex, WebRequest request) {
         log.warn("Missing request header error: {}", ex.getMessage());
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        return getResponseEntity(ex, request, status);
+        return getResponseEntity(ex, request, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = NotFoundException.class)
     protected ResponseEntity<Object> handleNotFound(NotFoundException ex, WebRequest request) {
         log.warn("Not found error: {}", ex.getMessage());
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        return getResponseEntity(ex, request, status);
+        return getResponseEntity(ex, request, HttpStatus.NOT_FOUND);
     }
 
      @ExceptionHandler(value = BookingStateIsNotSupportedException.class)
@@ -97,8 +92,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ExceptionHandler(value = PatchException.class)
     protected ResponseEntity<Object> handlePatchException(PatchException ex, WebRequest request) {
         log.warn("Patch error: {}", ex.getMessage());
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        return getResponseEntity(ex, request, status);
+        return getResponseEntity(ex, request, HttpStatus.NOT_FOUND);
     }
 
     private Map<String, Object> getGeneralErrorBody(HttpStatus status, WebRequest request, String message) {

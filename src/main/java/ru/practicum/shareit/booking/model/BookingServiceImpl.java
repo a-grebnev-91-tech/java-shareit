@@ -16,9 +16,9 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,15 +61,27 @@ public class BookingServiceImpl implements BookingService {
         checkUserExisting(bookerId);
         List<Booking> bookings;
         Sort sort = Sort.by(Sort.Direction.DESC, "start");
-        if (bookingState.equals(BookingsState.WAITING) || bookingState.equals(BookingsState.REJECTED)) {
-            bookings =
-                    bookingRepository
-                    .findAllByBookerIdAndStatus(bookerId, BookingStatus.valueOf(state), sort);
-        } else {
-            bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId);
-            if (!bookingState.equals(BookingsState.ALL)) {
-                bookings = filterBookingByState(bookings, bookingState);
-            }
+        LocalDateTime now = LocalDateTime.now();
+        switch (bookingState) {
+            case WAITING:
+            case REJECTED:
+                bookings = bookingRepository
+                        .findAllByBookerIdAndStatus(bookerId, BookingStatus.valueOf(state), sort);
+                break;
+            case ALL:
+                bookings = bookingRepository.findAllByBookerId(bookerId, sort);
+                break;
+            case PAST:
+                bookings = bookingRepository.findAllByBookerIdAndEndIsBefore(bookerId, now, sort);
+                break;
+            case CURRENT:
+                bookings = bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfter(bookerId, now, now, sort);
+                break;
+            case FUTURE:
+                bookings = bookingRepository.findAllByBookerIdAndStartIsAfter(bookerId, now, sort);
+                break;
+            default:
+                bookings = Collections.emptyList();
         }
         return mapper.toResponse(bookings);
     }
@@ -105,26 +117,6 @@ public class BookingServiceImpl implements BookingService {
         return booking.orElseThrow(
                 () -> new NotFoundException(String.format("Booking with id %d isn't exist", bookingId))
         );
-    }
-
-    //todo del
-    private List<Booking> filterBookingByState(List<Booking> bookings, BookingsState state) {
-        switch (state) {
-            case CURRENT:
-                return bookings.stream()
-                        .filter(this::bookingIsCurrent)
-                        .collect(Collectors.toList());
-            case PAST:
-                return bookings.stream()
-                        .filter(this::bookingInPast)
-                        .collect(Collectors.toList());
-            case FUTURE:
-                return bookings.stream()
-                        .filter(this::bookingInFuture)
-                        .collect(Collectors.toList());
-            default:
-                throw new BookingStateIsNotSupportedException(String.format("Booking state %s isn't supported", state.name()));
-        }
     }
 
     private boolean bookingInFuture(Booking booking) {
