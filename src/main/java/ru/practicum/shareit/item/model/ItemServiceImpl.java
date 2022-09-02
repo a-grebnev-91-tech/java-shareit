@@ -5,18 +5,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.ForbiddenOperationException;
+import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
-import ru.practicum.shareit.item.controller.dto.ItemOwnerResponse;
-import ru.practicum.shareit.item.controller.dto.ItemRequest;
-import ru.practicum.shareit.item.controller.dto.ItemResponse;
+import ru.practicum.shareit.item.controller.dto.*;
+import ru.practicum.shareit.item.mapper.CommentMapper;
+import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.util.Patcher;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +30,24 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
+    private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
     @Qualifier("InDbItems")
     private final ItemRepository itemRepository;
     @Qualifier("InDbUsers")
     private final UserRepository userRepository;
+    private final CommentMapper commentMapper;
     private final ItemMapper itemMapper;
     private final Patcher patcher;
+
+    @Override
+    public CommentResponse createComment(CommentRequest commentDto, Long itemId, Long userId) {
+        if (isUserDidntRentItem(userId, itemId)) {
+            throw new NotAvailableException("User cannot leave comments on item that he didn't rent");
+        }
+        Comment comment = commentMapper.toModel(commentDto, itemId, userId);
+        return commentMapper.toResponse(commentRepository.save(comment));
+    }
 
     @Override
     public ItemResponse createItem(long userId, ItemRequest dto) {
@@ -53,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository
                 .findById(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("Item with id %d isn't exist", itemId)));
-        //TODO после завершения спринта убрать
+        //TODO исправить после завершения проекта
         // реализовал функционал, который на мой взгляд логичнее, но тесты постмана его не поддерживают
         /*
         if (isItemBelongToUser(item, userId)) {
@@ -111,5 +127,11 @@ public class ItemServiceImpl implements ItemService {
     private boolean isItemBelongToUser(Item existingItem, long userId) {
         getUserOrThrow(userId);
         return existingItem.getOwner().getId().equals(userId);
+    }
+
+    private boolean isUserDidntRentItem(Long userId, Long itemId) {
+        List<Booking> bookings =
+                bookingRepository.findAllByBookerIdAndItemIdAndEndDateInPast(userId, itemId, LocalDateTime.now());
+        return bookings.isEmpty();
     }
 }

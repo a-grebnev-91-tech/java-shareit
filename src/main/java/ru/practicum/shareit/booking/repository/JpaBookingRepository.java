@@ -13,6 +13,10 @@ import java.util.List;
 public interface JpaBookingRepository extends JpaRepository<Booking, Long>, BookingRepository {
 
     @Override
+    @Query("SELECT b FROM Booking AS b WHERE b.booker.id = ?1 AND b.item.id = ?2 AND b.end < ?3")
+    List<Booking> findAllByBookerIdAndItemIdAndEndDateInPast(Long bookerId, Long itemId, LocalDateTime now);
+
+    @Override
     @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 ORDER BY b.start DESC")
     List<Booking> findAllByOwnerId(Long ownerId);
 

@@ -9,7 +9,10 @@ import ru.practicum.shareit.item.controller.dto.ItemResponse;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserReferenceMapper;
 
-@Mapper(componentModel = "spring", uses = {UserReferenceMapper.class, BookingReferenceMapper.class})
+@Mapper(
+        componentModel = "spring",
+        uses = {UserReferenceMapper.class, BookingReferenceMapper.class, CommentReferenceMapper.class}
+)
 public interface ItemMapper {
 
     @Mapping(source = "ownerId", target = "owner")
@@ -18,7 +21,9 @@ public interface ItemMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "id", target = "lastBooking")
     @Mapping(source = "id", target = "nextBooking")
+    @Mapping(source = "id", target = "comments")
     ItemOwnerResponse toOwnerResponse(Item model);
 
+    @Mapping(source = "id", target = "comments")
     ItemResponse toResponse(Item model);
 }

@@ -13,6 +13,8 @@ public interface BookingRepository {
 
     List<Booking> findAllByBookerIdAndEndIsBefore(Long id, LocalDateTime now, Sort sort);
 
+    List<Booking> findAllByBookerIdAndItemIdAndEndDateInPast(Long itemId, Long userId, LocalDateTime now);
+
     List<Booking> findAllByBookerIdAndStartIsAfter(Long bookerId, LocalDateTime now, Sort sort);
 
     List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfter(

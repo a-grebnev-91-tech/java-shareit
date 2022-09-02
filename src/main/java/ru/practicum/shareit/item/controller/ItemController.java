@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.controller.dto.CommentRequest;
+import ru.practicum.shareit.item.controller.dto.CommentResponse;
 import ru.practicum.shareit.item.controller.dto.ItemRequest;
 import ru.practicum.shareit.item.controller.dto.ItemResponse;
 import ru.practicum.shareit.item.model.ItemService;
 import ru.practicum.shareit.util.validation.groups.CreateInfo;
 import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static ru.practicum.shareit.util.Сonstant.USER_ID_HEADER;
@@ -20,6 +23,16 @@ import static ru.practicum.shareit.util.Сonstant.USER_ID_HEADER;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService service;
+
+    @PostMapping("{itemId}/comment")
+    public CommentResponse createComment(
+            @PathVariable("itemId") Long itemId,
+            @RequestHeader(USER_ID_HEADER) Long userId,
+            @RequestBody @Valid CommentRequest comment
+    ) {
+        log.info("User with id {} attempt to post comment to item {}",userId, itemId);
+        return service.createComment(comment, itemId, userId);
+    }
 
     @PostMapping
     public ItemResponse createItem(
@@ -38,7 +51,7 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public ItemResponse getItem(@PathVariable("id") long itemId, @RequestHeader(USER_ID_HEADER) long userId) {
-        log.info("User with id {} obtaining item with id {}",userId, itemId);
+        log.info("User with id {} obtaining item with id {}", userId, itemId);
         return service.getItem(itemId, userId);
     }
 

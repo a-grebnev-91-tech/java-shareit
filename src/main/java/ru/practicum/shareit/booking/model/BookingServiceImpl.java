@@ -51,7 +51,8 @@ public class BookingServiceImpl implements BookingService {
     public BookingResponse createBooking(BookingRequest bookingRequest, Long userId) {
         Booking booking = mapper.toModel(bookingRequest, userId);
         if (isOwner(userId, booking))
-            //TODO не знаю, почему здесь NotFound, но такой код ответа требуют тесты постмана
+            //TODO исправить после завершения проекта
+            //не знаю, почему здесь NotFound, но такой код ответа требуют тесты постмана
             throw new NotFoundException("The user can't book his own item");
         Item requestedItem = booking.getItem();
         if (requestedItem.isAvailable()) {
