@@ -8,14 +8,14 @@ import ru.practicum.shareit.item.controller.dto.CommentRequest;
 import ru.practicum.shareit.item.controller.dto.CommentResponse;
 import ru.practicum.shareit.item.controller.dto.ItemRequest;
 import ru.practicum.shareit.item.controller.dto.ItemResponse;
-import ru.practicum.shareit.item.model.ItemService;
+import ru.practicum.shareit.item.domain.ItemService;
 import ru.practicum.shareit.util.validation.groups.CreateInfo;
 import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
 import javax.validation.Valid;
 import java.util.List;
 
-import static ru.practicum.shareit.util.Сonstant.USER_ID_HEADER;
+import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
 @Slf4j
 @RestController

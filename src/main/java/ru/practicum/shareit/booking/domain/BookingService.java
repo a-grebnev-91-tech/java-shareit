@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.model;
+package ru.practicum.shareit.booking.domain;
 
 import ru.practicum.shareit.booking.controller.dto.BookingRequest;
 import ru.practicum.shareit.booking.controller.dto.BookingResponse;

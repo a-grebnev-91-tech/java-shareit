@@ -5,14 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.controller.dto.BookingRequest;
 import ru.practicum.shareit.booking.controller.dto.BookingResponse;
-import ru.practicum.shareit.booking.model.BookingService;
-import ru.practicum.shareit.booking.model.BookingsState;
+import ru.practicum.shareit.booking.domain.BookingService;
 
 import javax.validation.Valid;
 
 import java.util.List;
 
-import static ru.practicum.shareit.util.Сonstant.USER_ID_HEADER;
+import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
 @Slf4j
 @RestController

@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.shareit.item.controller.dto.CommentRequest;
 import ru.practicum.shareit.item.controller.dto.CommentResponse;
-import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.domain.Comment;
 import ru.practicum.shareit.user.mapper.UserReferenceMapper;
 
 @Mapper(componentModel = "spring", uses = {UserReferenceMapper.class, ItemReferenceMapper.class})

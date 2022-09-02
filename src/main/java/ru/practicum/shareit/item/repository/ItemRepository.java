@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item.repository;
 
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.domain.Item;
 
 import java.util.List;
 import java.util.Optional;

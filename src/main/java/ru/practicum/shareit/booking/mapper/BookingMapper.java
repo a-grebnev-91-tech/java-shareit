@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.mapper;
 
 import org.mapstruct.*;
 import ru.practicum.shareit.booking.controller.dto.*;
-import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.domain.Booking;
 import ru.practicum.shareit.item.mapper.ItemReferenceMapper;
 import ru.practicum.shareit.user.mapper.UserReferenceMapper;
 import java.util.List;

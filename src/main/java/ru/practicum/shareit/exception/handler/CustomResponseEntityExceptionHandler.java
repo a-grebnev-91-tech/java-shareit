@@ -66,6 +66,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
      @ExceptionHandler(value = BookingStateIsNotSupportedException.class)
      protected ResponseEntity<Object> handleBookingStateIsNotSupported(BookingStateIsNotSupportedException ex, WebRequest request) {
         log.warn("Booking state not supported error: {}", ex.getMessage());
+        //TODO поправить после завершения проекта (тесты постмана требуют такой ответ)
         Map<String, Object> body = new HashMap<>(1);
         body.put("error", ex.getMessage());
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);

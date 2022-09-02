@@ -1,6 +1,6 @@
 package ru.practicum.shareit.item.repository;
 
-import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.domain.Comment;
 
 import java.util.List;
 

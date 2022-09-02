@@ -1,8 +1,8 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.item.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.domain.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

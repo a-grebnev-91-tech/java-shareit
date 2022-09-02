@@ -1,11 +1,11 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.item.domain;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.domain.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.ForbiddenOperationException;
 import ru.practicum.shareit.exception.NotAvailableException;
@@ -17,7 +17,7 @@ import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.domain.User;
 import ru.practicum.shareit.util.Patcher;
 
 import java.time.LocalDateTime;

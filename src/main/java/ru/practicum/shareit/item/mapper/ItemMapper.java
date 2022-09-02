@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.mapper.BookingReferenceMapper;
 import ru.practicum.shareit.item.controller.dto.ItemOwnerResponse;
 import ru.practicum.shareit.item.controller.dto.ItemRequest;
 import ru.practicum.shareit.item.controller.dto.ItemResponse;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.domain.Item;
 import ru.practicum.shareit.user.mapper.UserReferenceMapper;
 
 @Mapper(

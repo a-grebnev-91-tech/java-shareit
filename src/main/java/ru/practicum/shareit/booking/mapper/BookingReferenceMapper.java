@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.controller.dto.LastBooking;
 import ru.practicum.shareit.booking.controller.dto.NextBooking;
-import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.domain.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 
 import java.time.LocalDateTime;

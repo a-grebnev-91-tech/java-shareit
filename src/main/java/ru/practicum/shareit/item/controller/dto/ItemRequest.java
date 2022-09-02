@@ -21,7 +21,6 @@ public class ItemRequest {
     @NotBlankButNull(groups = PatchInfo.class)
     private String name;
 
-    //todo перевести то стринг в отдельный объект
     @Override
     public String toString() {
         String header = "ItemRequest{";

@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item.repository;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.domain.Item;
 
 import java.util.*;
 import java.util.stream.Collectors;

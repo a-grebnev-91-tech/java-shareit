@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking.model;
+package ru.practicum.shareit.booking.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +12,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BookingStateIsNotSupportedException;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.domain.Item;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
@@ -33,7 +33,8 @@ public class BookingServiceImpl implements BookingService {
     public BookingResponse approveBooking(Long bookingId, Long userId, boolean approved) {
         Booking booking = getBookingOrThrow(bookingId);
         if (isBooker(userId, booking) && approved)
-            //TODO не знаю, почему здесь NotFound, но такой код ответа требуют тесты постмана
+            //TODO исправить после завершения проекта
+            // не знаю, почему здесь NotFound, но такой код ответа требуют тесты постмана
             throw new NotFoundException("Booker couldn't approve his booking");
         if (isOwner(userId, booking) && booking.getStatus() == BookingStatus.WAITING) {
             if (approved) {
@@ -52,7 +53,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = mapper.toModel(bookingRequest, userId);
         if (isOwner(userId, booking))
             //TODO исправить после завершения проекта
-            //не знаю, почему здесь NotFound, но такой код ответа требуют тесты постмана
+            // не знаю, почему здесь NotFound, но такой код ответа требуют тесты постмана
             throw new NotFoundException("The user can't book his own item");
         Item requestedItem = booking.getItem();
         if (requestedItem.isAvailable()) {

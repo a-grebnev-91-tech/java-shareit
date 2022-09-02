@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.model;
+package ru.practicum.shareit.item.domain;
 
 import ru.practicum.shareit.item.controller.dto.CommentRequest;
 import ru.practicum.shareit.item.controller.dto.CommentResponse;
