@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.controller.dto.ItemRequest;
+import ru.practicum.shareit.item.controller.dto.ItemResponse;
 import ru.practicum.shareit.item.model.ItemService;
 import ru.practicum.shareit.util.validation.groups.CreateInfo;
 import ru.practicum.shareit.util.validation.groups.PatchInfo;
@@ -35,9 +37,9 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ItemResponse getItem(@PathVariable("id") long id) {
-        log.info("Obtaining item with id {}", id);
-        return service.getItem(id);
+    public ItemResponse getItem(@PathVariable("id") long itemId, @RequestHeader(USER_ID_HEADER) long userId) {
+        log.info("User with id {} obtaining item with id {}",userId, itemId);
+        return service.getItem(itemId, userId);
     }
 
     @PatchMapping("/{itemId}")

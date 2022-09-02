@@ -8,8 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ForbiddenOperationException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
-import ru.practicum.shareit.item.controller.ItemRequest;
-import ru.practicum.shareit.item.controller.ItemResponse;
+import ru.practicum.shareit.item.controller.dto.ItemOwnerResponse;
+import ru.practicum.shareit.item.controller.dto.ItemRequest;
+import ru.practicum.shareit.item.controller.dto.ItemResponse;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -42,15 +43,33 @@ public class ItemServiceImpl implements ItemService {
         getUserOrThrow(userId);
         return itemRepository.findAllByOwnerId(userId)
                 .stream()
-                .map(itemMapper::toResponse)
+                .map(itemMapper::toOwnerResponse)
+                .sorted((i1, i2) -> Long.compare(i1.getId(), i2.getId()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ItemResponse getItem(long id) {
-        return itemMapper.toResponse(itemRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Item with id %d isn't exist", id))
-        ));
+    public ItemResponse getItem(long itemId, long userId) {
+        Item item = itemRepository
+                .findById(itemId)
+                .orElseThrow(() -> new NotFoundException(String.format("Item with id %d isn't exist", itemId)));
+        //TODO после завершения спринта убрать
+        // реализовал функционал, который на мой взгляд логичнее, но тесты постмана его не поддерживают
+        /*
+        if (isItemBelongToUser(item, userId)) {
+            return itemMapper.toOwnerResponse(item);
+        } else {
+            return itemMapper.toResponse(item);
+        }
+         */
+        if (isItemBelongToUser(item, userId)) {
+             return itemMapper.toOwnerResponse(item);
+        } else {
+            ItemOwnerResponse response = itemMapper.toOwnerResponse(item);
+            response.setNextBooking(null);
+            response.setLastBooking(null);
+            return response;
+        }
     }
 
     @Override

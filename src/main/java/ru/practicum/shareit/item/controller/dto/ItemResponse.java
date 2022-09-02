@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.controller;
+package ru.practicum.shareit.item.controller.dto;
 
 import lombok.Getter;
 import lombok.Setter;
