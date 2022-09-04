@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item.controller;
+package ru.practicum.shareit.item.controller.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,6 @@ import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 @Getter
 @Setter
@@ -21,8 +20,6 @@ public class ItemRequest {
     @NotBlank(groups = CreateInfo.class, message = "name should not be blank")
     @NotBlankButNull(groups = PatchInfo.class)
     private String name;
-    @Null(groups = PatchInfo.class)
-    private Long ownerId;
 
     @Override
     public String toString() {

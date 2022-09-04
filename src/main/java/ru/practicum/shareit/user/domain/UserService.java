@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.user.domain;
 
 import ru.practicum.shareit.user.controller.UserDto;
 

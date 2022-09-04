@@ -3,7 +3,6 @@ package ru.practicum.shareit.user.controller;
 import lombok.*;
 import ru.practicum.shareit.util.validation.groups.CreateInfo;
 import ru.practicum.shareit.util.validation.groups.PatchInfo;
-import ru.practicum.shareit.util.validation.UniqueEmail;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -19,7 +18,7 @@ public class UserDto {
     private String name;
     @NotNull(groups = CreateInfo.class, message = "email should not be null")
     @Email(groups = {CreateInfo.class, PatchInfo.class}, message = "email should be valid email address")
-    @UniqueEmail(groups = {CreateInfo.class, PatchInfo.class})
+//    @UniqueEmail(groups = {CreateInfo.class, PatchInfo.class}) // constraint passed to database for YP postman's tests
     private String email;
 
     @Override

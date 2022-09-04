@@ -1,16 +1,16 @@
 package ru.practicum.shareit.item.repository;
 
+import ru.practicum.shareit.item.domain.Item;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface ItemRepository {
-    Item createItem(Item item);
+    Item save(Item item);
 
-    List<Item> getAllByUser(long userId);
+    List<Item> findAllByOwnerId(long ownerId);
 
-    Optional<Item> getItem(long itemId);
+    Optional<Item> findById(long itemId);
 
-    List<Item> searchItem(String text);
-
-    Item updateItem(Item item);
+    List<Item> findByNameAndDescription(String text);
 }

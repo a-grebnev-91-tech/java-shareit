@@ -2,24 +2,28 @@ package ru.practicum.shareit.item.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.shareit.item.controller.ItemRequest;
-import ru.practicum.shareit.item.controller.ItemResponse;
-import ru.practicum.shareit.item.repository.Item;
-import ru.practicum.shareit.item.model.ItemModel;
+import ru.practicum.shareit.booking.mapper.BookingReferenceMapper;
+import ru.practicum.shareit.item.controller.dto.ItemOwnerResponse;
+import ru.practicum.shareit.item.controller.dto.ItemRequest;
+import ru.practicum.shareit.item.controller.dto.ItemResponse;
+import ru.practicum.shareit.item.domain.Item;
 import ru.practicum.shareit.user.mapper.UserReferenceMapper;
 
-@Mapper(componentModel = "spring", uses = {UserReferenceMapper.class})
+@Mapper(
+        componentModel = "spring",
+        uses = {UserReferenceMapper.class, BookingReferenceMapper.class, CommentReferenceMapper.class}
+)
 public interface ItemMapper {
-    @Mapping(source = "ownerId", target = "owner")
-    ItemModel entityToModel(Item entity);
-
-    ItemResponse entityToResponse(Item entity);
-
-    @Mapping(source = "owner", target = "ownerId")
-    Item modelToEntity(ItemModel model);
-
-    ItemResponse modelToResponse(ItemModel model);
 
     @Mapping(source = "ownerId", target = "owner")
-    ItemModel requestToModel(ItemRequest dto);
+    Item toModel(ItemRequest dto, Long ownerId);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "id", target = "lastBooking")
+    @Mapping(source = "id", target = "nextBooking")
+    @Mapping(source = "id", target = "comments")
+    ItemOwnerResponse toOwnerResponse(Item model);
+
+    @Mapping(source = "id", target = "comments")
+    ItemResponse toResponse(Item model);
 }

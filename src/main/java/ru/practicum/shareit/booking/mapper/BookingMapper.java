@@ -1,17 +1,24 @@
 package ru.practicum.shareit.booking.mapper;
 
-import org.mapstruct.Mapper;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.entity.Booking;
-import ru.practicum.shareit.booking.model.BookingModel;
+import org.mapstruct.*;
+import ru.practicum.shareit.booking.controller.dto.*;
+import ru.practicum.shareit.booking.domain.Booking;
+import ru.practicum.shareit.item.mapper.ItemReferenceMapper;
+import ru.practicum.shareit.user.mapper.UserReferenceMapper;
+import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring",
+        uses = {UserReferenceMapper.class, ItemReferenceMapper.class})
 public interface BookingMapper {
-    BookingModel dtoToModel(BookingDto dto);
+    @Mapping(source = "booking.booker.id", target = "bookerId")
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateBookingForItemFromBooking(Booking booking, @MappingTarget BookingForItem bookingForItem);
 
-    BookingModel entityToModel(Booking entity);
+    @Mapping(source = "dto.itemId", target = "item")
+    @Mapping(source = "bookerId", target = "booker")
+    Booking toModel(BookingRequest dto,Long bookerId);
 
-    BookingDto modelToDto(BookingModel model);
+    BookingResponse toResponse(Booking model);
 
-    Booking modelToEntity(BookingModel model);
+    List<BookingResponse> toResponse(List<Booking> modelList);
 }
