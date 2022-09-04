@@ -20,7 +20,6 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.domain.User;
 import ru.practicum.shareit.util.Patcher;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -131,7 +130,7 @@ public class ItemServiceImpl implements ItemService {
 
     private boolean isUserDidntRentItem(Long userId, Long itemId) {
         List<Booking> bookings =
-                bookingRepository.findAllByBookerIdAndItemIdAndEndDateInPast(userId, itemId, LocalDateTime.now());
+                bookingRepository.findAllCompletedByBookerAndItem(userId, itemId);
         return bookings.isEmpty();
     }
 }

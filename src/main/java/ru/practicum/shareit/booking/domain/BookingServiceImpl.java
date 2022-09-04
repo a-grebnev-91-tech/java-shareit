@@ -15,7 +15,6 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.domain.Item;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -69,24 +68,22 @@ public class BookingServiceImpl implements BookingService {
         checkUserExisting(bookerId);
         List<Booking> bookings;
         Sort sort = Sort.by(Sort.Direction.valueOf(order), sortBy);
-        LocalDateTime now = LocalDateTime.now();
         switch (bookingState) {
             case WAITING:
             case REJECTED:
-                bookings = bookingRepository
-                        .findAllByBookerIdAndStatus(bookerId, BookingStatus.valueOf(state), sort);
+                bookings = bookingRepository.findAllByBookerIdAndStatus(bookerId, BookingStatus.valueOf(state), sort);
                 break;
             case ALL:
                 bookings = bookingRepository.findAllByBookerId(bookerId, sort);
                 break;
             case PAST:
-                bookings = bookingRepository.findAllByBookerIdAndEndIsBefore(bookerId, now, sort);
+                bookings = bookingRepository.findAllPastByBooker(bookerId, sort);
                 break;
             case CURRENT:
-                bookings = bookingRepository.findAllByBookerIdAndStartIsBeforeAndEndIsAfter(bookerId, now, now, sort);
+                bookings = bookingRepository.findAllCurrentByBooker(bookerId, sort);
                 break;
             case FUTURE:
-                bookings = bookingRepository.findAllByBookerIdAndStartIsAfter(bookerId, now, sort);
+                bookings = bookingRepository.findAllComingByBooker(bookerId, sort);
                 break;
             default:
                 bookings = Collections.emptyList();
@@ -99,24 +96,22 @@ public class BookingServiceImpl implements BookingService {
         BookingsState bookingState = convertToBookingState(state);
         checkUserExisting(ownerId);
         List<Booking> bookings;
-        LocalDateTime now = LocalDateTime.now();
         switch (bookingState) {
             case WAITING:
             case REJECTED:
-                bookings = bookingRepository
-                        .findAllByOwnerIdAndStatus(ownerId, BookingStatus.valueOf(state));
+                bookings = bookingRepository.findAllByOwnerAndStatus(ownerId, BookingStatus.valueOf(state));
                 break;
             case ALL:
                 bookings = bookingRepository.findAllByOwnerId(ownerId);
                 break;
             case PAST:
-                bookings = bookingRepository.findAllByOwnerIdInPast(ownerId, now);
+                bookings = bookingRepository.findAllPastByOwner(ownerId);
                 break;
             case CURRENT:
-                bookings = bookingRepository.findAllByOwnerIdCurrent(ownerId, now);
+                bookings = bookingRepository.findAllCurrentByOwner(ownerId);
                 break;
             case FUTURE:
-                bookings = bookingRepository.findAllByOwnerIdInFuture(ownerId, now);
+                bookings = bookingRepository.findAllComingByOwner(ownerId);
                 break;
             default:
                 bookings = Collections.emptyList();

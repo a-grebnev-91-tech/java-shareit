@@ -4,37 +4,31 @@ import org.springframework.data.domain.Sort;
 import ru.practicum.shareit.booking.domain.Booking;
 import ru.practicum.shareit.booking.domain.BookingStatus;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface BookingRepository {
     List<Booking> findAllByBookerId(Long userId, Sort sort);
 
-    List<Booking> findAllByBookerIdAndEndIsBefore(Long id, LocalDateTime now, Sort sort);
-
-    List<Booking> findAllByBookerIdAndItemIdAndEndDateInPast(Long itemId, Long userId, LocalDateTime now);
-
-    List<Booking> findAllByBookerIdAndStartIsAfter(Long bookerId, LocalDateTime now, Sort sort);
-
-    List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfter(
-            Long bookerId,
-            LocalDateTime nowForStart,
-            LocalDateTime nowForEnd,
-            Sort sort
-    );
-
     List<Booking> findAllByBookerIdAndStatus(Long bookerId, BookingStatus status, Sort sort);
+
+    List<Booking> findAllByOwnerAndStatus(Long ownerId, BookingStatus status);
 
     List<Booking> findAllByOwnerId(Long ownerId);
 
-    List<Booking> findAllByOwnerIdAndStatus(Long ownerId, BookingStatus status);
+    List<Booking> findAllComingByBooker(Long bookerId, Sort sort);
 
-    List<Booking> findAllByOwnerIdCurrent(Long ownerId, LocalDateTime now);
+    List<Booking> findAllComingByOwner(Long ownerId);
 
-    List<Booking> findAllByOwnerIdInFuture(Long ownerId, LocalDateTime now);
+    List<Booking> findAllCompletedByBookerAndItem(Long bookerId, Long itemId);
 
-    List<Booking> findAllByOwnerIdInPast(Long ownerId, LocalDateTime now);
+    List<Booking> findAllCurrentByBooker(Long bookerId, Sort sort);
+
+    List<Booking> findAllCurrentByOwner(Long ownerId);
+
+    List<Booking> findAllPastByBooker(Long bookerId, Sort sort);
+
+    List<Booking> findAllPastByOwner(Long ownerId);
 
     Optional<Booking> findById(Long bookingId);
 
