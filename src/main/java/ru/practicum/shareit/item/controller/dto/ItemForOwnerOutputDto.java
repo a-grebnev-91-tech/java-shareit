@@ -7,7 +7,7 @@ import ru.practicum.shareit.booking.controller.dto.NextBookingDto;
 
 @Getter
 @Setter
-public class ItemOwnerDto extends ItemOutputDto {
+public class ItemForOwnerOutputDto extends ItemOutputDto {
     private LastBookingDto lastBooking;
     private NextBookingDto nextBooking;
 }

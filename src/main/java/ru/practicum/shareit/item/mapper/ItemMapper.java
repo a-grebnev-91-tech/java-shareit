@@ -3,9 +3,9 @@ package ru.practicum.shareit.item.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.shareit.booking.mapper.BookingReferenceMapper;
+import ru.practicum.shareit.item.controller.dto.ItemForOwnerOutputDto;
 import ru.practicum.shareit.item.controller.dto.ItemInputDto;
 import ru.practicum.shareit.item.controller.dto.ItemOutputDto;
-import ru.practicum.shareit.item.controller.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.domain.Item;
 import ru.practicum.shareit.user.mapper.UserReferenceMapper;
 
@@ -22,7 +22,7 @@ public interface ItemMapper {
     @Mapping(source = "id", target = "lastBooking")
     @Mapping(source = "id", target = "nextBooking")
     @Mapping(source = "id", target = "comments")
-    ItemOwnerDto toOwnerResponse(Item model);
+    ItemForOwnerOutputDto toOwnerResponse(Item model);
 
     @Mapping(source = "id", target = "comments")
     ItemOutputDto toResponse(Item model);

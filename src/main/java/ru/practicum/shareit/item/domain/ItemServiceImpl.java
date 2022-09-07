@@ -80,7 +80,7 @@ public class ItemServiceImpl implements ItemService {
         if (isItemBelongToUser(item, userId)) {
              return itemMapper.toOwnerResponse(item);
         } else {
-            ItemOwnerDto response = itemMapper.toOwnerResponse(item);
+            ItemForOwnerOutputDto response = itemMapper.toOwnerResponse(item);
             response.setNextBooking(null);
             response.setLastBooking(null);
             return response;
