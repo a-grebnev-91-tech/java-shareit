@@ -25,6 +25,5 @@ public class ItemRequest {
     @Column(name = "created")
     private LocalDateTime created;
     @OneToMany
-    @JoinColumn(name = "responses")
     List<Item> responses;
 }
