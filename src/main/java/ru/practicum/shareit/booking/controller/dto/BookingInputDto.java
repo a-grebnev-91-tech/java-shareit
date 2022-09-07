@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EndAfterStart
-public class BookingRequest {
+public class BookingInputDto {
     @Null
     private Long bookerId;
     @NotNull(message = "itemId should not be null")

@@ -12,13 +12,13 @@ import java.util.List;
 public interface BookingMapper {
     @Mapping(source = "booking.booker.id", target = "bookerId")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateBookingForItemFromBooking(Booking booking, @MappingTarget BookingForItem bookingForItem);
+    void updateBookingForItemFromBooking(Booking booking, @MappingTarget BookingForItemDto bookingForItemDto);
 
     @Mapping(source = "dto.itemId", target = "item")
     @Mapping(source = "bookerId", target = "booker")
-    Booking toModel(BookingRequest dto,Long bookerId);
+    Booking toModel(BookingInputDto dto, Long bookerId);
 
-    BookingResponse toResponse(Booking model);
+    BookingOutputDto toResponse(Booking model);
 
-    List<BookingResponse> toResponse(List<Booking> modelList);
+    List<BookingOutputDto> toResponse(List<Booking> modelList);
 }

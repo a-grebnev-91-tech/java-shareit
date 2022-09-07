@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Booker {
+public class BookerDto {
     private Long id;
 }

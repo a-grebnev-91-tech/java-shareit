@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class ItemRequest {
+public class ItemInputDto {
     @NotNull(groups = CreateInfo.class, message = "available should not be null")
     private Boolean available;
     @NotBlank(groups = CreateInfo.class, message = "description should not be blank")

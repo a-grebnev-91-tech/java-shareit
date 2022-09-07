@@ -7,10 +7,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ItemResponse {
+public class ItemOutputDto {
     private Long id;
     private String name;
     private String description;
     private Boolean available;
-    private List<CommentResponse> comments;
+    private List<CommentOutputDto> comments;
 }

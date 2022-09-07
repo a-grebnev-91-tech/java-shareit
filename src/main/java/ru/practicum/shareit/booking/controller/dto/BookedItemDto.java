@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BookedItem {
+public class BookedItemDto {
     private Long id;
     private String name;
 }

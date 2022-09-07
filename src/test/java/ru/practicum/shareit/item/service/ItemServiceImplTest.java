@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.practicum.shareit.item.controller.dto.ItemRequest;
-import ru.practicum.shareit.item.controller.dto.ItemResponse;
+import ru.practicum.shareit.item.controller.dto.ItemInputDto;
+import ru.practicum.shareit.item.controller.dto.ItemOutputDto;
 import ru.practicum.shareit.item.domain.Item;
 import ru.practicum.shareit.item.domain.ItemService;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -32,15 +32,15 @@ public class ItemServiceImplTest {
         user.setName("Test user");
         user.setEmail("test@test.ru");
         userService.createUser(user);
-        ItemRequest dto = new ItemRequest();
+        ItemInputDto dto = new ItemInputDto();
         dto.setAvailable(true);
         dto.setDescription("Test description for test item");
         dto.setName("Test item");
-        ItemResponse response = itemService.createItem(1, dto);
+        ItemOutputDto response = itemService.createItem(1, dto);
 
         TypedQuery<Item> query = em.createQuery("SELECT i FROM Item i WHERE i.id = :id", Item.class);
         Item fromDb = query.setParameter("id", response.getId()).getSingleResult();
-        ItemResponse responseFromDb = mapper.toResponse(fromDb);
+        ItemOutputDto responseFromDb = mapper.toResponse(fromDb);
 
         assertThat(responseFromDb.getId(), equalTo(response.getId()));
     }

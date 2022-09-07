@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
-public class CommentRequest {
+public class CommentInputDto {
     @NotEmpty
     private String text;
 }

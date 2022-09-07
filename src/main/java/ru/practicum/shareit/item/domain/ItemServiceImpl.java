@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
     private final Patcher patcher;
 
     @Override
-    public CommentResponse createComment(CommentRequest commentDto, Long itemId, Long userId) {
+    public CommentOutputDto createComment(CommentInputDto commentDto, Long itemId, Long userId) {
         if (isUserDidntRentItem(userId, itemId)) {
             throw new NotAvailableException("User cannot leave comments on item that he didn't rent");
         }
@@ -49,12 +49,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponse createItem(long userId, ItemRequest dto) {
+    public ItemOutputDto createItem(long userId, ItemInputDto dto) {
         return itemMapper.toResponse(itemRepository.save(itemMapper.toModel(dto, userId)));
     }
 
     @Override
-    public List<ItemResponse> getAllByUser(long userId) {
+    public List<ItemOutputDto> getAllByUser(long userId) {
         getUserOrThrow(userId);
         return itemRepository.findAllByOwnerId(userId)
                 .stream()
@@ -64,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemResponse getItem(long itemId, long userId) {
+    public ItemOutputDto getItem(long itemId, long userId) {
         Item item = itemRepository
                 .findById(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("Item with id %d isn't exist", itemId)));
@@ -80,7 +80,7 @@ public class ItemServiceImpl implements ItemService {
         if (isItemBelongToUser(item, userId)) {
              return itemMapper.toOwnerResponse(item);
         } else {
-            ItemOwnerResponse response = itemMapper.toOwnerResponse(item);
+            ItemOwnerDto response = itemMapper.toOwnerResponse(item);
             response.setNextBooking(null);
             response.setLastBooking(null);
             return response;
@@ -89,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemResponse patchItem(long userId, long itemId, ItemRequest patch) {
+    public ItemOutputDto patchItem(long userId, long itemId, ItemInputDto patch) {
         Item existingItem = getItemOrThrow(itemId);
         if (isItemBelongToUser(existingItem, userId)) {
             if (patcher.patch(existingItem, patch)) {
@@ -105,7 +105,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemResponse> searchItem(String text) {
+    public List<ItemOutputDto> searchItem(String text) {
         if (text.isBlank())
             return Collections.emptyList();
         List<Item> founded = itemRepository.findByNameAndDescription(text);

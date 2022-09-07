@@ -7,11 +7,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class BookingResponse {
+public class BookingForItemDto {
     private Long id;
-    private Booker booker;
-    private BookedItem item;
-    private String status;
+    private Long bookerId;
     private LocalDateTime start;
     private LocalDateTime end;
 }

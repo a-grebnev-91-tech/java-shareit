@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.controller.dto.BookingRequest;
-import ru.practicum.shareit.booking.controller.dto.BookingResponse;
+import ru.practicum.shareit.booking.controller.dto.BookingInputDto;
+import ru.practicum.shareit.booking.controller.dto.BookingOutputDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.BookingStateIsNotSupportedException;
@@ -29,7 +29,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingResponse approveBooking(Long bookingId, Long userId, boolean approved) {
+    public BookingOutputDto approveBooking(Long bookingId, Long userId, boolean approved) {
         Booking booking = getBookingOrThrow(bookingId);
         if (isBooker(userId, booking) && approved)
             //TODO исправить после завершения проекта
@@ -48,8 +48,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResponse createBooking(BookingRequest bookingRequest, Long userId) {
-        Booking booking = mapper.toModel(bookingRequest, userId);
+    public BookingOutputDto createBooking(BookingInputDto bookingInputDto, Long userId) {
+        Booking booking = mapper.toModel(bookingInputDto, userId);
         if (isOwner(userId, booking))
             //TODO исправить после завершения проекта
             // не знаю, почему здесь NotFound, но такой код ответа требуют тесты постмана
@@ -63,7 +63,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponse> getAllBookingsByBooker(Long bookerId, String state, String sortBy, String order) {
+    public List<BookingOutputDto> getAllBookingsByBooker(Long bookerId, String state, String sortBy, String order) {
         BookingsState bookingState = convertToBookingState(state);
         checkUserExisting(bookerId);
         List<Booking> bookings;
@@ -92,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponse> getAllBookingsByOwner(Long ownerId, String state) {
+    public List<BookingOutputDto> getAllBookingsByOwner(Long ownerId, String state) {
         BookingsState bookingState = convertToBookingState(state);
         checkUserExisting(ownerId);
         List<Booking> bookings;
@@ -120,7 +120,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResponse getBooking(Long bookingId, Long userId) {
+    public BookingOutputDto getBooking(Long bookingId, Long userId) {
         Booking booking = getBookingOrThrow(bookingId);
         if (isBooker(userId, booking) || isOwner(userId, booking)) {
             return mapper.toResponse(booking);

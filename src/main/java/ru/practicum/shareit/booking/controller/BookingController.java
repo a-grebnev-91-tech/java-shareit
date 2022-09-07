@@ -3,8 +3,8 @@ package ru.practicum.shareit.booking.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.controller.dto.BookingRequest;
-import ru.practicum.shareit.booking.controller.dto.BookingResponse;
+import ru.practicum.shareit.booking.controller.dto.BookingOutputDto;
+import ru.practicum.shareit.booking.controller.dto.BookingInputDto;
 import ru.practicum.shareit.booking.domain.BookingService;
 
 import javax.validation.Valid;
@@ -21,16 +21,16 @@ public class BookingController {
     private final BookingService service;
 
     @PostMapping
-    public BookingResponse createBooking(
+    public BookingOutputDto createBooking(
             @RequestHeader(value = USER_ID_HEADER) Long bookerId,
-            @RequestBody @Valid BookingRequest dto
+            @RequestBody @Valid BookingInputDto dto
     ) {
         log.info("Attempt to create booking by user with id {} for item with id {}", bookerId, dto.getItemId());
         return service.createBooking(dto, bookerId);
     }
 
     @GetMapping("{bookingId}")
-    public BookingResponse getBooking(
+    public BookingOutputDto getBooking(
             @PathVariable("bookingId") Long bookingId,
             @RequestHeader(USER_ID_HEADER) Long userId) {
         log.info("Attempt to get booking with id {} by user with id {}", bookingId, userId);
@@ -38,7 +38,7 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingResponse> getAllByBooker(
+    public List<BookingOutputDto> getAllByBooker(
             @RequestHeader(USER_ID_HEADER) Long userId,
             @RequestParam(value = "state", defaultValue = "ALL") String state,
             @RequestParam(value = "sortBy", defaultValue = "start") String sortBy,
@@ -55,7 +55,7 @@ public class BookingController {
     }
 
     @GetMapping("owner")
-    public List<BookingResponse> getAllByOwner(
+    public List<BookingOutputDto> getAllByOwner(
             @RequestHeader(USER_ID_HEADER) Long userId,
             @RequestParam(value = "state", defaultValue = "ALL") String state
     ) {
@@ -68,7 +68,7 @@ public class BookingController {
     }
 
     @PatchMapping("{bookingId}")
-    public BookingResponse patchBooking(
+    public BookingOutputDto patchBooking(
             @PathVariable("bookingId") Long bookingId,
             @RequestParam("approved") boolean approved,
             @RequestHeader(USER_ID_HEADER) Long userId) {
