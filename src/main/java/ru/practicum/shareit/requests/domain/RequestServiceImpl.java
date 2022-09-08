@@ -2,7 +2,6 @@ package ru.practicum.shareit.requests.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.requests.controller.dto.RequestInputDto;
@@ -30,7 +29,6 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<RequestOutputDto> getAllRequests(Integer from, Integer size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "created");
         return mapper.batchModelToDto(requestRepository.findAllRequests(from, size));
     }
 
