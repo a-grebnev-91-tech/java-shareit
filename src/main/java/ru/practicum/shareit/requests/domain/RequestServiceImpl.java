@@ -35,7 +35,8 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<RequestOutputDto> getAllRequestsByUser(Long userId) {
         checkUserExisting(userId);
-        return mapper.batchModelToDto(requestRepository.findAllByRequesterId(userId));
+        List<Request> requests = requestRepository.findAllByRequesterId(userId);
+        return mapper.batchModelToDto(requests);
     }
 
     private void checkUserExisting(Long userId) {

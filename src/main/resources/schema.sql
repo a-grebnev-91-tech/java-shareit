@@ -66,3 +66,10 @@ CREATE TABLE IF NOT EXISTS comments
 );
 
 CREATE INDEX IF NOT EXISTS comments_indexes ON comments (id, item_id, author_id);
+
+CREATE TABLE IF NOT EXISTS item_requests_responses
+(
+    responses_id    BIGINT REFERENCES items (id) ON DELETE CASCADE,
+    request_id BIGINT REFERENCES item_requests (id) ON DELETE CASCADE,
+    CONSTRAINT item_requests_responses_pk PRIMARY KEY (responses_id, request_id)
+);
