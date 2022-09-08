@@ -19,15 +19,17 @@ import ru.practicum.shareit.requests.domain.RequestService;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
-import static org.hamcrest.Matchers.in;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
+//todo integr
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @WebMvcTest(controllers = RequestController.class)
 class RequestControllerTest {
@@ -58,7 +60,7 @@ class RequestControllerTest {
         outputDto = new RequestOutputDto();
         outputDto.setId(1L);
         outputDto.setDescription(REQUEST_DESCRIPTION);
-        outputDto.setItems(Collections.singletonList(getItemOutputDto()));
+        outputDto.setItems(List.of(getItemOutputDto()));
 
         HEADER_WITH_USER_ID.add(USER_ID_HEADER, USER_ID.toString());
     }
@@ -91,7 +93,7 @@ class RequestControllerTest {
     }
 
     @Test
-    void test2_shouldReturnNotFoundForInvalidUserId() throws Exception {
+    void test2_creatingRequestShouldReturnNotFoundForInvalidUserId() throws Exception {
         Long invalidUserId = -1L;
         HttpHeaders invalidUserHeader = new HttpHeaders();
         invalidUserHeader.add(USER_ID_HEADER, invalidUserId.toString());
@@ -108,7 +110,7 @@ class RequestControllerTest {
     }
 
     @Test
-    void test3_shouldReturnBadRequestForBlankDescription() throws Exception {
+    void test3_creatingRequestShouldReturnBadRequestForBlankDescription() throws Exception {
         RequestInputDto invalidDto = new RequestInputDto();
         mockMvc.perform(post(ROOT_PATH)
                         .content(jsonMapper.writeValueAsString(invalidDto))
@@ -153,5 +155,45 @@ class RequestControllerTest {
                         .headers(HEADER_WITH_USER_ID)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void test4_gettingRequestsByValidUserShouldReturnOk() throws Exception {
+        when(service.getAllRequestsByUser(USER_ID)).thenReturn(List.of(outputDto));
+
+        mockMvc.perform(get(ROOT_PATH)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .headers(HEADER_WITH_USER_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(1)))
+                .andExpect(jsonPath("$[0].id", is(outputDto.getId()), Long.class))
+                .andExpect(jsonPath("$[0].description", is(outputDto.getDescription())))
+                .andExpect(jsonPath("$[0].created", is(outputDto.getCreated()), LocalDateTime.class))
+                .andExpect(jsonPath("$[0].items.length()", is(1)))
+                .andExpect(jsonPath("$[0].items[0]", is(itemOutputDto), ItemOutputDto.class));
+    }
+
+    @Test
+    void test5_gettingRequestsByUserShouldReturnNotFoundForInvalidUserId() throws Exception {
+        when(service.getAllRequestsByUser(USER_ID)).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get(ROOT_PATH)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .headers(HEADER_WITH_USER_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void test6_gettingRequestsByUserShouldReturnEmptyForUserWithoutRequests() throws Exception {
+        when(service.getAllRequestsByUser(USER_ID)).thenReturn(List.of());
+
+        mockMvc.perform(get(ROOT_PATH)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .headers(HEADER_WITH_USER_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(0)));
     }
 }
