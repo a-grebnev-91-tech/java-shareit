@@ -8,4 +8,6 @@ public interface RequestRepository {
     Request save(Request model);
 
     List<Request> findAllByRequesterId(Long userId);
+
+    List<Request> findAllRequests(Integer from, Integer size);
 }

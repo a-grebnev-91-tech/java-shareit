@@ -34,4 +34,14 @@ public class RequestController {
         log.info("User with id {} is trying to get all his requests", userId);
         return service.getAllRequestsByUser(userId);
     }
+
+    //GET /requests/all?from={from}&size={size
+    @GetMapping("/all")
+    public List<RequestOutputDto> getAllRequests(
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "20") Integer size
+    ) {
+        log.info("Obtaining all requests from {} size {}", from, size);
+        return service.getAllRequests(from, size);
+    }
 }

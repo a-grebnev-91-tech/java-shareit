@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public interface JpaBookingRepository extends JpaRepository<Booking, Long>, BookingRepository {
     @Override
-    default List<Booking> findAllComingByBooker(Long bookerId, Sort sort) {
-        return findAllByBookerIdAndStartIsAfter(bookerId, LocalDateTime.now(), sort);
+    default List<Booking> findAllComingByBooker(Long bookerId, String sortBy, String order) {
+        return findAllByBookerIdAndStartIsAfter(bookerId, LocalDateTime.now(), getSort(sortBy, order));
     }
 
     @Override
@@ -36,8 +36,13 @@ public interface JpaBookingRepository extends JpaRepository<Booking, Long>, Book
     }
 
     @Override
-    default List<Booking> findAllCurrentByBooker(Long bookerId, Sort sort) {
-        return findAllByBookerIdAndStartIsBeforeAndEndIsAfter(bookerId, LocalDateTime.now(), LocalDateTime.now(), sort);
+    default List<Booking> findAllCurrentByBooker(Long bookerId, String sortBy, String order) {
+        return findAllByBookerIdAndStartIsBeforeAndEndIsAfter(
+                bookerId,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                getSort(sortBy, order)
+        );
     }
 
     @Override
@@ -46,8 +51,8 @@ public interface JpaBookingRepository extends JpaRepository<Booking, Long>, Book
     }
 
     @Override
-    default List<Booking> findAllPastByBooker(Long bookerId, Sort sort) {
-        return findAllByBookerIdAndEndIsBefore(bookerId, LocalDateTime.now(), sort);
+    default List<Booking> findAllPastByBooker(Long bookerId, String sortBy, String order) {
+        return findAllByBookerIdAndEndIsBefore(bookerId, LocalDateTime.now(), getSort(sortBy, order));
     }
 
     @Override
@@ -78,4 +83,8 @@ public interface JpaBookingRepository extends JpaRepository<Booking, Long>, Book
 
     @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.end < ?2 ORDER BY b.start DESC")
     List<Booking> findAllPastByOwner(Long ownerId, LocalDateTime now);
+
+    default Sort getSort(String sortBy, String order) {
+        return Sort.by(Sort.Direction.valueOf(order), sortBy);
+    }
 }

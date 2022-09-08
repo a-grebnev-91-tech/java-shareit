@@ -2,7 +2,6 @@ package ru.practicum.shareit.booking.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.controller.dto.BookingInputDto;
@@ -67,23 +66,23 @@ public class BookingServiceImpl implements BookingService {
         BookingsState bookingState = convertToBookingState(state);
         checkUserExisting(bookerId);
         List<Booking> bookings;
-        Sort sort = Sort.by(Sort.Direction.valueOf(order), sortBy);
         switch (bookingState) {
             case WAITING:
             case REJECTED:
-                bookings = bookingRepository.findAllByBookerIdAndStatus(bookerId, BookingStatus.valueOf(state), sort);
+                bookings = bookingRepository
+                        .findAllByBookerIdAndStatus(bookerId, BookingStatus.valueOf(state), sortBy, order);
                 break;
             case ALL:
-                bookings = bookingRepository.findAllByBookerId(bookerId, sort);
+                bookings = bookingRepository.findAllByBookerId(bookerId, sortBy, order);
                 break;
             case PAST:
-                bookings = bookingRepository.findAllPastByBooker(bookerId, sort);
+                bookings = bookingRepository.findAllPastByBooker(bookerId, sortBy, order);
                 break;
             case CURRENT:
-                bookings = bookingRepository.findAllCurrentByBooker(bookerId, sort);
+                bookings = bookingRepository.findAllCurrentByBooker(bookerId, sortBy, order);
                 break;
             case FUTURE:
-                bookings = bookingRepository.findAllComingByBooker(bookerId, sort);
+                bookings = bookingRepository.findAllComingByBooker(bookerId, sortBy, order);
                 break;
             default:
                 bookings = Collections.emptyList();
