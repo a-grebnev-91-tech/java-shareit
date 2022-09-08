@@ -32,6 +32,6 @@ public class RequestController {
     @GetMapping
     public List<RequestOutputDto> getRequestsByUser(@RequestHeader(USER_ID_HEADER) Long userId) {
         log.info("User with id {} is trying to get all his requests", userId);
-        return service.getRequestByUser(userId);
+        return service.getAllRequestsByUser(userId);
     }
 }
