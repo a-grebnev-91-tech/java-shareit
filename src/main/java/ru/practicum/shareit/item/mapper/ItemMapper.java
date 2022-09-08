@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import ru.practicum.shareit.booking.mapper.BookingReferenceMapper;
 import ru.practicum.shareit.item.controller.dto.ItemForOwnerOutputDto;
 import ru.practicum.shareit.item.controller.dto.ItemInputDto;
@@ -24,6 +25,7 @@ public interface ItemMapper {
     @Mapping(source = "id", target = "comments")
     ItemForOwnerOutputDto toOwnerResponse(Item model);
 
+    @Named("itemToDto")
     @Mapping(source = "id", target = "comments")
     ItemOutputDto toResponse(Item model);
 }

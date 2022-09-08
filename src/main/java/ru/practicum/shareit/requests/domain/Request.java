@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "item_requests")
-public class ItemRequest {
+public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +23,7 @@ public class ItemRequest {
     @JoinColumn(name = "requester_id")
     private User requester;
     @Column(name = "created")
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
     @OneToMany
     List<Item> responses;
 }

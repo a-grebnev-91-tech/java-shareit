@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.practicum.shareit.requests.domain.ItemRequest;
+import ru.practicum.shareit.requests.domain.Request;
 import ru.practicum.shareit.user.domain.User;
 
 import javax.persistence.*;
@@ -26,5 +26,5 @@ public class Item {
     private boolean available;
     @ManyToOne
     @JoinColumn(name = "request_id")
-    ItemRequest request;
+    Request request;
 }

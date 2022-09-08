@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class ItemRequestInputDto {
+public class RequestInputDto {
     @NotNull
     private String description;
 }
