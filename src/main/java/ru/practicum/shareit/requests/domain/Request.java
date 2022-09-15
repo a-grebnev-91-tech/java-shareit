@@ -25,5 +25,6 @@ public class Request {
     @Column(name = "created")
     private LocalDateTime created = LocalDateTime.now();
     @OneToMany
+    @JoinColumn(name = "request_id")
     List<Item> responses;
 }

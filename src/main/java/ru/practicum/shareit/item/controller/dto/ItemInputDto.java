@@ -20,6 +20,7 @@ public class ItemInputDto {
     @NotBlank(groups = CreateInfo.class, message = "name should not be blank")
     @NotBlankButNull(groups = PatchInfo.class)
     private String name;
+    private Long requestId;
 
     @Override
     public String toString() {

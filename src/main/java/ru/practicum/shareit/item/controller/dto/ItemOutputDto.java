@@ -14,5 +14,6 @@ public class ItemOutputDto {
     private String name;
     private String description;
     private Boolean available;
+    private Long requestId;
     private List<CommentOutputDto> comments;
 }
