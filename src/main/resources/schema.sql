@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users
     CONSTRAINT user_email_unique UNIQUE (email)
 );
 
-CREATE INDEX IF NOT EXISTS users_indexes ON users (id, email);
+CREATE INDEX IF NOT EXISTS users_indexes ON users (email);
 
 CREATE TABLE IF NOT EXISTS item_requests
 (
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS item_requests
     CONSTRAINT created_is_not_null CHECK (created IS NOT NULL)
 );
 
-CREATE INDEX IF NOT EXISTS item_requests_indexes ON item_requests (id, description, requester_id);
+CREATE INDEX IF NOT EXISTS item_requests_indexes ON item_requests (description, requester_id);
 
 CREATE TABLE IF NOT EXISTS items
 (
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS items
     CONSTRAINT item_available_not_null CHECK (available IS NOT NULL)
 );
 
-CREATE INDEX IF NOT EXISTS items_indexes ON items (id, name, description, owner_id);
+CREATE INDEX IF NOT EXISTS items_indexes ON items (name, description, owner_id);
 
 CREATE TABLE IF NOT EXISTS bookings
 (
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS bookings
     CONSTRAINT status_not_null CHECK (status IS NOT NULL)
 );
 
-CREATE INDEX IF NOT EXISTS bookings_indexes ON bookings (id, booker_id);
+CREATE INDEX IF NOT EXISTS bookings_indexes ON bookings (booker_id);
 
 CREATE TABLE IF NOT EXISTS comments
 (
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS comments
     CONSTRAINT created_is_not_null CHECK (created IS NOT NULL)
 );
 
-CREATE INDEX IF NOT EXISTS comments_indexes ON comments (id, item_id, author_id);
+CREATE INDEX IF NOT EXISTS comments_indexes ON comments (item_id, author_id);
 
 CREATE TABLE IF NOT EXISTS item_requests_responses
 (
