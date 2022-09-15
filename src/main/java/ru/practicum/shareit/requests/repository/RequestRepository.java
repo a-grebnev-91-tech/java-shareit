@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface RequestRepository {
     List<Request> findAllByRequesterId(Long userId);
 
-    List<Request> findAllRequests(Integer from, Integer size);
+    List<Request> findAllRequestsButUser(Long userId, Integer from, Integer size);
 
     Optional<Request> findById(Long id);
 

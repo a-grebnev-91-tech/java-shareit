@@ -12,12 +12,12 @@ import java.util.List;
 @Repository
 public interface JpaRequestRepository extends JpaRepository<Request, Long>, RequestRepository {
     @Override
-    default List<Request> findAllRequests(Integer from, Integer size) {
+    default List<Request> findAllRequestsButUser(Long userId, Integer from, Integer size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "created");
         Pageable page = OffsetPageable.of(from, size, sort);
-        return findAll(page).getContent();
+        return findByRequesterIdNot(userId, page).getContent();
     }
 
-    Page<Request> findAll(Pageable pageable);
+    Page<Request> findByRequesterIdNot(Long requesterId, Pageable pageable);
 
 }

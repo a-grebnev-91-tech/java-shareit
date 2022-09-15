@@ -29,19 +29,28 @@ public class RequestController {
         return service.createRequest(requesterId, dto);
     }
 
+    @GetMapping("/all")
+    public List<RequestOutputDto> getAllRequestsButUser(
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "20") Integer size,
+            @RequestHeader(USER_ID_HEADER) Long userId
+    ) {
+        log.info("Obtaining all requests from {} size {} by user with id {}", from, size, userId);
+        return service.getAllRequestsButUser(userId, from, size);
+    }
+
+    @GetMapping("/{id}")
+    public RequestOutputDto getRequestsById(
+            @RequestHeader(USER_ID_HEADER) Long userId,
+            @PathVariable(name = "id") Long requestId
+    ) {
+        log.info("User with id {} is trying to get request with id {}", userId, requestId);
+        return service.getRequestById(userId, requestId);
+    }
+
     @GetMapping
     public List<RequestOutputDto> getRequestsByUser(@RequestHeader(USER_ID_HEADER) Long userId) {
         log.info("User with id {} is trying to get all his requests", userId);
         return service.getAllRequestsByUser(userId);
-    }
-
-    //GET /requests/all?from={from}&size={size
-    @GetMapping("/all")
-    public List<RequestOutputDto> getAllRequests(
-            @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @RequestParam(name = "size", defaultValue = "20") Integer size
-    ) {
-        log.info("Obtaining all requests from {} size {}", from, size);
-        return service.getAllRequests(from, size);
     }
 }
