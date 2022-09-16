@@ -12,17 +12,6 @@ import java.util.List;
 
 @Repository
 public interface JpaBookingRepository extends JpaRepository<Booking, Long>, BookingRepository {
-//    @Override
-//    default List<Booking> findAllByBookerId(Long userId, String sortBy, String order) {
-//        return findAllByBookerId(userId, getSort(sortBy, order));
-//    }
-
-    //TODO comment out
-//    @Override
-//    default List<Booking> findAllByBookerIdAndStatus(Long bookerId, BookingStatus status, Pageable pageable) {
-//        return findAllByBookerIdAndStatus(bookerId, status, getSort(sortBy, order));
-//    }
-
     @Override
     default List<Booking> findAllComingByBooker(Long bookerId, Pageable pageable) {
         return findAllByBookerIdAndStartIsAfter(bookerId, LocalDateTime.now(), pageable);
@@ -71,8 +60,6 @@ public interface JpaBookingRepository extends JpaRepository<Booking, Long>, Book
         return findAllPastByOwner(ownerId, LocalDateTime.now(), pageable);
     }
 
-//    List<Booking> findAllByBookerId(Long userId, Sort sort);
-
     List<Booking> findAllByBookerIdAndEndIsBefore(Long id, LocalDateTime now, Pageable pageable);
 
     List<Booking> findAllByBookerIdAndStartIsAfter(Long bookerId, LocalDateTime now, Pageable pageable);
@@ -83,9 +70,6 @@ public interface JpaBookingRepository extends JpaRepository<Booking, Long>, Book
             LocalDateTime nowForEnd,
             Pageable pageable
     );
-
-    //TODO comment out
-//    List<Booking> findAllByBookerIdAndStatus(Long bookerId, BookingStatus status, Sort sort);
 
     @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.start > ?2")
     List<Booking> findAllComingByOwner(Long ownerId, LocalDateTime now, Pageable pageable);
