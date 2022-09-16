@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import ru.practicum.shareit.requests.repository.OffsetPageable;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 public class BookingParamObj {
     public static final String DEFAULT_SORT_BY = "start";

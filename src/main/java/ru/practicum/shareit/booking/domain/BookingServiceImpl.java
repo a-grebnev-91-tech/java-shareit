@@ -40,7 +40,7 @@ public class BookingServiceImpl implements BookingService {
             } else {
                 booking.setStatus(BookingStatus.REJECTED);
             }
-            return mapper.toResponse(bookingRepository.save(booking));
+            return mapper.modelToResponse(bookingRepository.save(booking));
         } else {
             throw new NotAvailableException("Could not change booking status");
         }
@@ -48,14 +48,14 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingOutputDto createBooking(BookingInputDto bookingInputDto, Long userId) {
-        Booking booking = mapper.toModel(bookingInputDto, userId);
+        Booking booking = mapper.dtoToModel(bookingInputDto, userId);
         if (isOwner(userId, booking))
             //TODO исправить после завершения проекта
             // не знаю, почему здесь NotFound, но такой код ответа требуют тесты постмана
             throw new NotFoundException("The user can't book his own item");
         Item requestedItem = booking.getItem();
         if (requestedItem.isAvailable()) {
-            return mapper.toResponse(bookingRepository.save(booking));
+            return mapper.modelToResponse(bookingRepository.save(booking));
         } else {
             throw new NotAvailableException(String.format("Item with id %d isn't available", requestedItem.getId()));
         }
@@ -89,7 +89,7 @@ public class BookingServiceImpl implements BookingService {
             default:
                 bookings = Collections.emptyList();
         }
-        return mapper.toResponse(bookings);
+        return mapper.modelsToResponse(bookings);
     }
 
     @Override
@@ -120,14 +120,14 @@ public class BookingServiceImpl implements BookingService {
             default:
                 bookings = Collections.emptyList();
         }
-        return mapper.toResponse(bookings);
+        return mapper.modelsToResponse(bookings);
     }
 
     @Override
     public BookingOutputDto getBooking(Long bookingId, Long userId) {
         Booking booking = getBookingOrThrow(bookingId);
         if (isBooker(userId, booking) || isOwner(userId, booking)) {
-            return mapper.toResponse(booking);
+            return mapper.modelToResponse(booking);
         } else {
             throw new NotFoundException(
                     String.format("User with id %d doesn't have access to booking with id %d", userId, bookingId)

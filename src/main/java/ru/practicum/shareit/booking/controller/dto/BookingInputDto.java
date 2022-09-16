@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @Setter
 @EndAfterStart
 public class BookingInputDto {
-    @Null
-    private Long bookerId;
     @NotNull(message = "itemId should not be null")
     private Long itemId;
     @Future(message = "start time should not be in past")

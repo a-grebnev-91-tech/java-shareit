@@ -16,9 +16,9 @@ public interface BookingMapper {
 
     @Mapping(source = "dto.itemId", target = "item")
     @Mapping(source = "bookerId", target = "booker")
-    Booking toModel(BookingInputDto dto, Long bookerId);
+    Booking dtoToModel(BookingInputDto dto, Long bookerId);
 
-    BookingOutputDto toResponse(Booking model);
+    BookingOutputDto modelToResponse(Booking model);
 
-    List<BookingOutputDto> toResponse(List<Booking> modelList);
+    List<BookingOutputDto> modelsToResponse(List<Booking> modelList);
 }
