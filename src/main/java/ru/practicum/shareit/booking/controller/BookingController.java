@@ -15,6 +15,8 @@ import javax.validation.constraints.Min;
 
 import java.util.List;
 
+import static ru.practicum.shareit.booking.BookingParamObj.BOOKING_DEFAULT_ORDER;
+import static ru.practicum.shareit.booking.BookingParamObj.BOOKING_DEFAULT_SORT_BY;
 import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
 @Slf4j
@@ -42,15 +44,14 @@ public class BookingController {
         return service.getBooking(bookingId, userId);
     }
 
-    //todo add static default
     @GetMapping
     public List<BookingOutputDto> getAllByBooker(
             @RequestHeader(USER_ID_HEADER) Long userId,
             @RequestParam(value = "state", defaultValue = "ALL") String state,
             @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
-            @RequestParam(value = "sortBy", defaultValue = "start") String sortBy,
-            @RequestParam(value = "order", defaultValue = "DESC") @ValidSortOrder String order
+            @RequestParam(value = "sortBy", defaultValue = BOOKING_DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(value = "order", defaultValue = BOOKING_DEFAULT_ORDER) @ValidSortOrder String order
     ) {
         log.info(
                 "Booker with id {} attempt to get all his bookings with state {} order by {} {}",
@@ -64,15 +65,14 @@ public class BookingController {
         return service.getAllBookingsByBooker(paramObj);
     }
 
-    //todo add static default
     @GetMapping("owner")
     public List<BookingOutputDto> getAllByOwner(
             @RequestHeader(USER_ID_HEADER) Long userId,
             @RequestParam(value = "state", defaultValue = "ALL") String state,
             @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
-            @RequestParam(value = "sortBy", defaultValue = "start") String sortBy,
-            @RequestParam(value = "order", defaultValue = "DESC") @ValidSortOrder String order
+            @RequestParam(value = "sortBy", defaultValue = BOOKING_DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(value = "order", defaultValue = BOOKING_DEFAULT_ORDER) @ValidSortOrder String order
     ) {
         log.info(
                 "Owner with id {} attempt to get all bookings of his items with state {}",

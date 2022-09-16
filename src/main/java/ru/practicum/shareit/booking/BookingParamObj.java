@@ -15,8 +15,8 @@ import ru.practicum.shareit.requests.repository.OffsetPageable;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class BookingParamObj {
-    public static final String DEFAULT_SORT_BY = "start";
-    public static final String DEFAULT_ORDER = "DESC";
+    public static final String BOOKING_DEFAULT_SORT_BY = "start";
+    public static final String BOOKING_DEFAULT_ORDER = "DESC";
     public static final int DEFAULT_OFFSET = 0;
     public static final int DEFAULT_SIZE = 20;
 
@@ -27,8 +27,8 @@ public class BookingParamObj {
     private BookingParamObj(BookingParamBuilder builder) {
         this.userId = builder.userId;
         this.state = convertToBookingState(builder.state);
-        String sortBy  = builder.sortBy == null ? DEFAULT_SORT_BY : builder.sortBy;
-        String sortOrder = builder.sortOrder == null ? DEFAULT_ORDER : builder.sortOrder;
+        String sortBy  = builder.sortBy == null ? BOOKING_DEFAULT_SORT_BY : builder.sortBy;
+        String sortOrder = builder.sortOrder == null ? BOOKING_DEFAULT_ORDER : builder.sortOrder;
         int offset = builder.from == null ? DEFAULT_OFFSET : builder.from;
         int size = builder.size == null ? DEFAULT_SIZE : builder.size;
         Sort sort = Sort.by(Sort.Direction.valueOf(sortOrder), sortBy);
