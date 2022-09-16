@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.domain;
 
+import ru.practicum.shareit.booking.BookingParamObj;
 import ru.practicum.shareit.booking.controller.dto.BookingOutputDto;
 import ru.practicum.shareit.booking.controller.dto.BookingInputDto;
 
@@ -10,9 +11,9 @@ public interface BookingService {
 
     BookingOutputDto createBooking(BookingInputDto request, Long userId);
 
-    List<BookingOutputDto> getAllBookingsByBooker(Long userId, String state, String sortBy, String order);
+    List<BookingOutputDto> getAllBookingsByBooker(BookingParamObj paramObj);
 
-    List<BookingOutputDto> getAllBookingsByOwner(Long userId, String state);
+    List<BookingOutputDto> getAllBookingsByOwner(BookingParamObj paramObj);
 
     BookingOutputDto getBooking(Long bookingId, Long userId);
 }

@@ -8,6 +8,7 @@ import ru.practicum.shareit.requests.controller.dto.RequestOutputDto;
 import ru.practicum.shareit.requests.domain.RequestService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 import java.util.List;
 
@@ -31,8 +32,8 @@ public class RequestController {
 
     @GetMapping("/all")
     public List<RequestOutputDto> getAllRequestsButUser(
-            @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @RequestParam(name = "size", defaultValue = "20") Integer size,
+            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
             @RequestHeader(USER_ID_HEADER) Long userId
     ) {
         log.info("Obtaining all requests from {} size {} by user with id {}", from, size, userId);

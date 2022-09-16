@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import ru.practicum.shareit.exception.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,6 +33,18 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     private static final String ERROR = "error";
     private static final String PATH = "path";
 
+    @ExceptionHandler(value = Exception.class)
+    protected ResponseEntity<Object> commonHandler(Exception ex, WebRequest request) {
+        log.warn("Unexpected error has occurred: {}", ex.getMessage());
+        return getResponseEntity(ex, request, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    protected ResponseEntity<Object> handleConflictEmail(ConstraintViolationException ex, WebRequest request) {
+        log.warn("Constraint violation: {}", ex.getMessage());
+        return getResponseEntity(ex, request, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = ConflictEmailException.class)
     protected ResponseEntity<Object> handleConflictEmail(ConflictEmailException ex, WebRequest request) {
         log.warn("Email conflict: {}", ex.getMessage());
@@ -43,6 +56,12 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     protected ResponseEntity<Object> handleForbiddenOperation(ForbiddenOperationException ex, WebRequest request) {
         log.warn("Forbidden operation error: {}", ex.getMessage());
         return getResponseEntity(ex, request, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    protected ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
+        log.warn("Illegal argument error: {}", ex.getMessage());
+        return getResponseEntity(ex, request, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = NotAvailableException.class)
@@ -63,10 +82,10 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return getResponseEntity(ex, request, HttpStatus.NOT_FOUND);
     }
 
-     @ExceptionHandler(value = BookingStateIsNotSupportedException.class)
-     protected ResponseEntity<Object> handleBookingStateIsNotSupported(
-             BookingStateIsNotSupportedException ex, WebRequest request
-     ) {
+    @ExceptionHandler(value = BookingStateIsNotSupportedException.class)
+    protected ResponseEntity<Object> handleBookingStateIsNotSupported(
+            BookingStateIsNotSupportedException ex, WebRequest request
+    ) {
         log.warn("Booking state not supported error: {}", ex.getMessage());
         //TODO поправить после завершения проекта (тесты постмана требуют такой ответ)
         Map<String, Object> body = new HashMap<>(1);

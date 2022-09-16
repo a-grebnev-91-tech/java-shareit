@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.BookingParamObj;
 import ru.practicum.shareit.booking.controller.dto.BookingInputDto;
 import ru.practicum.shareit.booking.controller.dto.BookingOutputDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exception.BookingStateIsNotSupportedException;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.domain.Item;
@@ -62,27 +62,29 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingOutputDto> getAllBookingsByBooker(Long bookerId, String state, String sortBy, String order) {
-        BookingsState bookingState = convertToBookingState(state);
-        checkUserExisting(bookerId);
+    public List<BookingOutputDto> getAllBookingsByBooker(BookingParamObj paramObj) {
+        checkUserExisting(paramObj.getUserId());
         List<Booking> bookings;
-        switch (bookingState) {
+        switch (paramObj.getState()) {
             case WAITING:
             case REJECTED:
-                bookings = bookingRepository
-                        .findAllByBookerIdAndStatus(bookerId, BookingStatus.valueOf(state), sortBy, order);
+                bookings = bookingRepository.findAllByBookerIdAndStatus(
+                        paramObj.getUserId(),
+                        BookingStatus.valueOf(paramObj.getState().name()),
+                        paramObj.getPageable()
+                );
                 break;
             case ALL:
-                bookings = bookingRepository.findAllByBookerId(bookerId, sortBy, order);
+                bookings = bookingRepository.findAllByBookerId(paramObj.getUserId(), paramObj.getPageable());
                 break;
             case PAST:
-                bookings = bookingRepository.findAllPastByBooker(bookerId, sortBy, order);
+                bookings = bookingRepository.findAllPastByBooker(paramObj.getUserId(), paramObj.getPageable());
                 break;
             case CURRENT:
-                bookings = bookingRepository.findAllCurrentByBooker(bookerId, sortBy, order);
+                bookings = bookingRepository.findAllCurrentByBooker(paramObj.getUserId(), paramObj.getPageable());
                 break;
             case FUTURE:
-                bookings = bookingRepository.findAllComingByBooker(bookerId, sortBy, order);
+                bookings = bookingRepository.findAllComingByBooker(paramObj.getUserId(), paramObj.getPageable());
                 break;
             default:
                 bookings = Collections.emptyList();
@@ -91,26 +93,29 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingOutputDto> getAllBookingsByOwner(Long ownerId, String state) {
-        BookingsState bookingState = convertToBookingState(state);
-        checkUserExisting(ownerId);
+    public List<BookingOutputDto> getAllBookingsByOwner(BookingParamObj paramObj) {
+        checkUserExisting(paramObj.getUserId());
         List<Booking> bookings;
-        switch (bookingState) {
+        switch (paramObj.getState()) {
             case WAITING:
             case REJECTED:
-                bookings = bookingRepository.findAllByOwnerAndStatus(ownerId, BookingStatus.valueOf(state));
+                bookings = bookingRepository.findAllByOwnerIdAndStatus(
+                        paramObj.getUserId(),
+                        BookingStatus.valueOf(paramObj.getState().name()),
+                        paramObj.getPageable()
+                );
                 break;
             case ALL:
-                bookings = bookingRepository.findAllByOwnerId(ownerId);
+                bookings = bookingRepository.findAllByOwnerId(paramObj.getUserId(), paramObj.getPageable());
                 break;
             case PAST:
-                bookings = bookingRepository.findAllPastByOwner(ownerId);
+                bookings = bookingRepository.findAllPastByOwnerId(paramObj.getUserId(), paramObj.getPageable());
                 break;
             case CURRENT:
-                bookings = bookingRepository.findAllCurrentByOwner(ownerId);
+                bookings = bookingRepository.findAllCurrentByOwnerId(paramObj.getUserId(), paramObj.getPageable());
                 break;
             case FUTURE:
-                bookings = bookingRepository.findAllComingByOwner(ownerId);
+                bookings = bookingRepository.findAllComingByOwnerId(paramObj.getUserId(), paramObj.getPageable());
                 break;
             default:
                 bookings = Collections.emptyList();
@@ -133,14 +138,6 @@ public class BookingServiceImpl implements BookingService {
     private void checkUserExisting(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(String.format("User with id %d isn't exist", userId));
-        }
-    }
-
-    private BookingsState convertToBookingState(String state) {
-        try {
-            return BookingsState.valueOf(state);
-        } catch (IllegalArgumentException ex) {
-            throw new BookingStateIsNotSupportedException(String.format("Unknown state: %s", state));
         }
     }
 
