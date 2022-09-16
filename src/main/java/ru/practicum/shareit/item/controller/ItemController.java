@@ -4,17 +4,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.ItemsParamObject;
 import ru.practicum.shareit.item.controller.dto.CommentInputDto;
 import ru.practicum.shareit.item.controller.dto.CommentOutputDto;
 import ru.practicum.shareit.item.controller.dto.ItemInputDto;
 import ru.practicum.shareit.item.controller.dto.ItemOutputDto;
 import ru.practicum.shareit.item.domain.ItemService;
+import ru.practicum.shareit.util.validation.ValidSortOrder;
 import ru.practicum.shareit.util.validation.groups.CreateInfo;
 import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
+import static ru.practicum.shareit.item.ItemsParamObject.ITEMS_DEFAULT_ORDER;
+import static ru.practicum.shareit.item.ItemsParamObject.ITEMS_DEFAULT_SORT_BY;
 import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
 @Slf4j
@@ -44,9 +49,17 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemOutputDto> getAll(@RequestHeader(value = USER_ID_HEADER) long userId) {
+    public List<ItemOutputDto> getAll(
+            @RequestHeader(value = USER_ID_HEADER) long userId,
+            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
+            @RequestParam(value = "sortBy", defaultValue = ITEMS_DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER) @ValidSortOrder String order
+    ) {
         log.info("Obtaining all items");
-        return service.getAllByUser(userId);
+        ItemsParamObject params = ItemsParamObject.newBuilder().withUserId(userId).from(from).size(size).sortBy(sortBy)
+                .sortOrder(order).build();
+        return service.getAllByUser(params);
     }
 
     @GetMapping("/{id}")
@@ -66,8 +79,17 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public List<ItemOutputDto> searchItems(@RequestParam String text) {
+    public List<ItemOutputDto> searchItems(
+            @RequestParam String text,
+            @RequestHeader(value = USER_ID_HEADER) long userId,
+            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
+            @RequestParam(value = "sortBy", defaultValue = ITEMS_DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER) @ValidSortOrder String order
+    ) {
         log.info("Searching item by {}", text);
-        return service.searchItem(text);
+        ItemsParamObject params = ItemsParamObject.newBuilder().withUserId(userId).withText(text).from(from).size(size)
+                .sortBy(sortBy).sortOrder(order).build();
+        return service.searchItem(params);
     }
 }

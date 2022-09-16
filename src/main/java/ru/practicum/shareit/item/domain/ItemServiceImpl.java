@@ -11,13 +11,13 @@ import ru.practicum.shareit.exception.ForbiddenOperationException;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.PatchException;
+import ru.practicum.shareit.item.ItemsParamObject;
 import ru.practicum.shareit.item.controller.dto.*;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.domain.User;
 import ru.practicum.shareit.util.Patcher;
 
 import java.util.Collections;
@@ -54,12 +54,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemOutputDto> getAllByUser(long userId) {
-        getUserOrThrow(userId);
-        return itemRepository.findAllByOwnerId(userId)
+    public List<ItemOutputDto> getAllByUser(ItemsParamObject params) {
+        checkUserExistingOrThrow(params.getUserId());
+        return itemRepository.findAllByOwnerId(params.getUserId(), params.getPageable())
                 .stream()
                 .map(itemMapper::toOwnerResponse)
-                .sorted((i1, i2) -> Long.compare(i1.getId(), i2.getId()))
                 .collect(Collectors.toList());
     }
 
@@ -105,11 +104,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemOutputDto> searchItem(String text) {
-        if (text.isBlank())
+    public List<ItemOutputDto> searchItem(ItemsParamObject params) {
+        checkUserExistingOrThrow(params.getUserId());
+        if (params.getText().isBlank())
             return Collections.emptyList();
-        List<Item> founded = itemRepository.findByNameAndDescription(text);
+        List<Item> founded = itemRepository.findByNameAndDescription(params.getText(), params.getPageable());
         return founded.stream().map(itemMapper::toResponse).collect(Collectors.toList());
+    }
+
+    private void checkUserExistingOrThrow(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException(String.format("User with id %d isn't exist", userId));
+        }
     }
 
     private Item getItemOrThrow(long itemId) {
@@ -118,13 +124,8 @@ public class ItemServiceImpl implements ItemService {
 
     }
 
-    private User getUserOrThrow(long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return user.orElseThrow(() -> new NotFoundException(String.format("User with id %d isn't exist", userId)));
-    }
-
     private boolean isItemBelongToUser(Item existingItem, long userId) {
-        getUserOrThrow(userId);
+        checkUserExistingOrThrow(userId);
         return existingItem.getOwner().getId().equals(userId);
     }
 

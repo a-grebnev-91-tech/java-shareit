@@ -42,6 +42,7 @@ public class BookingController {
         return service.getBooking(bookingId, userId);
     }
 
+    //todo add static default
     @GetMapping
     public List<BookingOutputDto> getAllByBooker(
             @RequestHeader(USER_ID_HEADER) Long userId,
@@ -58,11 +59,12 @@ public class BookingController {
                 sortBy,
                 order
         );
-        BookingParamObj paramObj = BookingParamObj.newBuilder().withUserId(userId).withState(state).from(from).size(size)
-                .sortBy(sortBy).sortOrder(order).build();
+        BookingParamObj paramObj = BookingParamObj.newBuilder().withUserId(userId).withState(state).from(from)
+                .size(size).sortBy(sortBy).sortOrder(order).build();
         return service.getAllBookingsByBooker(paramObj);
     }
 
+    //todo add static default
     @GetMapping("owner")
     public List<BookingOutputDto> getAllByOwner(
             @RequestHeader(USER_ID_HEADER) Long userId,

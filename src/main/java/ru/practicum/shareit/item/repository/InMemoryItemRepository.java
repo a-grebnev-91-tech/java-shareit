@@ -1,11 +1,13 @@
 package ru.practicum.shareit.item.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.domain.Item;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+//TODO remove all in memory shit
 @Repository("InMemoryItems")
 public class InMemoryItemRepository implements ItemRepository {
     private long currentId;
@@ -26,7 +28,7 @@ public class InMemoryItemRepository implements ItemRepository {
     }
 
     @Override
-    public List<Item> findAllByOwnerId(long ownerId) {
+    public List<Item> findAllByOwnerId(long ownerId, Pageable pageable) {
         return items.values().stream().filter(item -> item.getOwner().getId() == ownerId).collect(Collectors.toList());
     }
 
@@ -36,7 +38,7 @@ public class InMemoryItemRepository implements ItemRepository {
     }
 
     @Override
-    public List<Item> findByNameAndDescription(String text) {
+    public List<Item> findByNameAndDescription(String text, Pageable pageable) {
         return items.values()
                 .stream()
                 .filter(item -> item.isAvailable() && isItemSuitForText(item, text))

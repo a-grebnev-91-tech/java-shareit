@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.domain;
 
+import ru.practicum.shareit.item.ItemsParamObject;
 import ru.practicum.shareit.item.controller.dto.CommentInputDto;
 import ru.practicum.shareit.item.controller.dto.CommentOutputDto;
 import ru.practicum.shareit.item.controller.dto.ItemInputDto;
@@ -12,11 +13,11 @@ public interface ItemService {
 
     ItemOutputDto createItem(long userId, ItemInputDto dto);
 
-    List<ItemOutputDto> getAllByUser(long userId);
+    List<ItemOutputDto> getAllByUser(ItemsParamObject params);
 
     ItemOutputDto getItem(long itemId, long userId);
 
     ItemOutputDto patchItem(long userId, long itemId, ItemInputDto patchRequest);
 
-    List<ItemOutputDto> searchItem(String text);
+    List<ItemOutputDto> searchItem(ItemsParamObject params);
 }
