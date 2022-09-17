@@ -69,27 +69,4 @@ class ItemControllerParameterObjectTest {
         assertEquals(sortBy, sortParam[0].trim());
         assertEquals(orderBy, sortParam[1].trim());
     }
-
-    private ItemsParamObject getItemsParamObj() {
-        return ItemsParamObject
-                .newBuilder()
-                .from(from)
-                .size(size)
-                .withUserId(userId)
-                .sortBy(sortBy)
-                .sortOrder(orderBy)
-                .build();
-    }
-
-    private ItemsParamObject getItemsParamObjWithText() {
-        return ItemsParamObject
-                .newBuilder()
-                .withText(text)
-                .from(from)
-                .size(size)
-                .withUserId(userId)
-                .sortBy(sortBy)
-                .sortOrder(orderBy)
-                .build();
-    }
 }
