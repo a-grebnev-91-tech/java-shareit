@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.controller.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.util.validation.EndAfterStart;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @EndAfterStart
 public class BookingInputDto {
     @NotNull(message = "itemId should not be null")

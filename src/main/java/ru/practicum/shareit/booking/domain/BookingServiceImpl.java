@@ -14,7 +14,6 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.domain.Item;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +63,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingOutputDto> getAllBookingsByBooker(BookingParamObj paramObj) {
         checkUserExisting(paramObj.getUserId());
-        List<Booking> bookings;
+        List<Booking> bookings = null;
         switch (paramObj.getState()) {
             case WAITING:
             case REJECTED:
@@ -86,8 +85,6 @@ public class BookingServiceImpl implements BookingService {
             case FUTURE:
                 bookings = bookingRepository.findAllComingByBooker(paramObj.getUserId(), paramObj.getPageable());
                 break;
-            default:
-                bookings = Collections.emptyList();
         }
         return mapper.modelsToResponse(bookings);
     }
@@ -95,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingOutputDto> getAllBookingsByOwner(BookingParamObj paramObj) {
         checkUserExisting(paramObj.getUserId());
-        List<Booking> bookings;
+        List<Booking> bookings = null;
         switch (paramObj.getState()) {
             case WAITING:
             case REJECTED:
@@ -117,8 +114,6 @@ public class BookingServiceImpl implements BookingService {
             case FUTURE:
                 bookings = bookingRepository.findAllComingByOwnerId(paramObj.getUserId(), paramObj.getPageable());
                 break;
-            default:
-                bookings = Collections.emptyList();
         }
         return mapper.modelsToResponse(bookings);
     }
@@ -129,6 +124,7 @@ public class BookingServiceImpl implements BookingService {
         if (isBooker(userId, booking) || isOwner(userId, booking)) {
             return mapper.modelToResponse(booking);
         } else {
+            //TODO исправить по завершению проекта на NotAvailable
             throw new NotFoundException(
                     String.format("User with id %d doesn't have access to booking with id %d", userId, bookingId)
             );
