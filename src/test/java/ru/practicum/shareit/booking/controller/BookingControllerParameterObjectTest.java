@@ -7,13 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.booking.BookingParamObj;
-import ru.practicum.shareit.booking.controller.dto.BookingOutputDto;
-import ru.practicum.shareit.booking.domain.Booking;
 import ru.practicum.shareit.booking.domain.BookingService;
 import ru.practicum.shareit.booking.domain.BookingsState;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,6 +37,7 @@ class BookingControllerParameterObjectTest {
         verify(service).getAllBookingsByOwner(captor.capture());
         BookingParamObj capturedParam = captor.getValue();
 
+        assertNotNull(capturedParam);
         assertEquals(paramObj, capturedParam);
         assertEquals(userId, capturedParam.getUserId());
         assertEquals(BookingsState.valueOf(state), capturedParam.getState());
@@ -77,6 +73,7 @@ class BookingControllerParameterObjectTest {
         verify(service).getAllBookingsByBooker(captor.capture());
         BookingParamObj capturedParam = captor.getValue();
 
+        assertNotNull(capturedParam);
         assertEquals(paramObj, capturedParam);
         assertEquals(userId, capturedParam.getUserId());
         assertEquals(BookingsState.valueOf(state), capturedParam.getState());

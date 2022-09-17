@@ -136,12 +136,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void checkUserExisting(Long userId) {
-        if (!userRepository.existsById(userId)) {
+        if (userId == null) throw new NotAvailableException("User id should not be null");
+        if (!userRepository.existsById(userId))
             throw new NotFoundException(String.format("User with id %d isn't exist", userId));
-        }
     }
 
     private Booking getBookingOrThrow(Long bookingId) {
+        if (bookingId == null) throw new NotAvailableException("Booking id should not be null");
         Optional<Booking> booking = bookingRepository.findById(bookingId);
         return booking.orElseThrow(
                 () -> new NotFoundException(String.format("Booking with id %d isn't exist", bookingId))
@@ -149,14 +150,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private boolean isBooker(Long userId, Booking booking) {
-        if (userId == null)
-            return false;
+        if (userId == null) return false;
+        checkUserExisting(userId);
         return userId.equals(booking.getBooker().getId());
     }
 
     private boolean isOwner(Long userId, Booking booking) {
-        if (userId == null)
-            return false;
+        if (userId == null) return false;
+        checkUserExisting(userId);
         return userId.equals(booking.getItem().getOwner().getId());
     }
 }
