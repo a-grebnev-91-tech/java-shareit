@@ -29,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
-//todo integr
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @WebMvcTest(controllers = RequestController.class)
 class RequestControllerTest {

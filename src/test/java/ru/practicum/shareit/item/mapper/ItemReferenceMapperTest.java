@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.mapper;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -13,11 +14,12 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//TODO unit
 @ExtendWith(MockitoExtension.class)
 class ItemReferenceMapperTest {
     @Mock
     ItemRepository repo;
+    @InjectMocks
+    ItemReferenceMapper mapper;
 
     @Test
     void test1_shouldReturnUserByIdOrThrow() {
@@ -27,7 +29,6 @@ class ItemReferenceMapperTest {
         item.setId(validId);
 
         Mockito.when(repo.findById(validId)).thenReturn(Optional.of(item));
-        ItemReferenceMapper mapper = new ItemReferenceMapper(repo);
 
         assertEquals(item, mapper.map(validId));
         NotFoundException ex = assertThrows(NotFoundException.class, () -> mapper.map(invalidId));
@@ -43,8 +44,6 @@ class ItemReferenceMapperTest {
         long id = 1;
         Item item = new Item();
         item.setId(id);
-
-        ItemReferenceMapper mapper = new ItemReferenceMapper(repo);
 
         assertEquals(id, mapper.map(item));
     }
