@@ -18,9 +18,9 @@ public class BookingReferenceMapper {
     private final BookingMapper mapper;
 
     public LastBookingDto mapToLast(Long itemId) {
-        List<Booking> booking = repo.findByItemId(itemId);
+        List<Booking> bookings = repo.findByItemId(itemId);
         TreeSet<Booking> bookingTreeSet = new TreeSet<>((b1, b2) -> b1.getEnd().compareTo(b2.getEnd()));
-        bookingTreeSet.addAll(booking);
+        bookingTreeSet.addAll(bookings);
         Booking nowBooking = new Booking();
         nowBooking.setEnd(LocalDateTime.now());
         Booking lastBooking = bookingTreeSet.floor(nowBooking);

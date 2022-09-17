@@ -19,15 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BookingInputValidationTest {
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private Validator validator;
-
-    @BeforeEach
-    public void setUpValidator() {
-        validator = factory.getValidator();
-    }
+    private final Validator validator = factory.getValidator();
 
     @MethodSource("test1MethodSource")
-    @ParameterizedTest(name = "{index}. Check valid booking dto with {1}")
+    @ParameterizedTest(name = "{index}. Check valid booking dto with {4}")
     void test1_bookingValidation(
             Long id,
             LocalDateTime start,
