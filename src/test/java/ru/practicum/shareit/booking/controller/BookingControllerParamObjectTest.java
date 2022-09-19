@@ -6,8 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.practicum.shareit.booking.BookingParamObj;
 import ru.practicum.shareit.booking.domain.BookingService;
 import ru.practicum.shareit.booking.domain.BookingsState;

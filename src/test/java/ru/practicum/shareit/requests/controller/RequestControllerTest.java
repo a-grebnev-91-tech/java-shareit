@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -194,5 +196,29 @@ class RequestControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", is(0)));
+    }
+
+    @Test
+    void test7_getAllRequestsButUser() throws Exception {
+        when(service.getAllRequestsButUser(anyLong(), anyInt(), anyInt())).thenReturn(List.of(outputDto));
+
+        mockMvc.perform(get(ROOT_PATH + "/all")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .headers(HEADER_WITH_USER_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(1)));
+    }
+
+    @Test
+    void test8_getRequestById() throws Exception {
+        when(service.getRequestById(anyLong(), anyLong())).thenReturn(outputDto);
+
+        mockMvc.perform(get(ROOT_PATH + "/1")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .headers(HEADER_WITH_USER_ID)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)));
     }
 }
