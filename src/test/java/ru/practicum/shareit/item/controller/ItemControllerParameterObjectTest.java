@@ -6,8 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.practicum.shareit.booking.BookingParamObj;
-import ru.practicum.shareit.booking.domain.BookingsState;
 import ru.practicum.shareit.item.ItemsParamObject;
 import ru.practicum.shareit.item.domain.ItemService;
 

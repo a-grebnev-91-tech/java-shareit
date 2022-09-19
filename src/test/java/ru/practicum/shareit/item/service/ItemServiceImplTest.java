@@ -22,27 +22,27 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ItemServiceImplTest {
-    private final ItemService itemService;
-    private final UserService userService;
-    private final ItemMapper mapper;
-    private final EntityManager em;
-
-    @Test
-    void test1_shouldCreateItem() {
-        UserDto user = new UserDto();
-        user.setName("Test user");
-        user.setEmail("test@test.ru");
-        userService.createUser(user);
-        ItemInputDto dto = new ItemInputDto();
-        dto.setAvailable(true);
-        dto.setDescription("Test description for test item");
-        dto.setName("Test item");
-        ItemOutputDto response = itemService.createItem(1, dto);
-
-        TypedQuery<Item> query = em.createQuery("SELECT i FROM Item i WHERE i.id = :id", Item.class);
-        Item fromDb = query.setParameter("id", response.getId()).getSingleResult();
-        ItemOutputDto responseFromDb = mapper.toResponse(fromDb);
-
-        assertThat(responseFromDb.getId(), equalTo(response.getId()));
-    }
+//    private final ItemService itemService;
+//    private final UserService userService;
+//    private final ItemMapper mapper;
+//    private final EntityManager em;
+//
+//    @Test
+//    void test1_shouldCreateItem() {
+//        UserDto user = new UserDto();
+//        user.setName("Test user");
+//        user.setEmail("test@test.ru");
+//        userService.createUser(user);
+//        ItemInputDto dto = new ItemInputDto();
+//        dto.setAvailable(true);
+//        dto.setDescription("Test description for test item");
+//        dto.setName("Test item");
+//        ItemOutputDto response = itemService.createItem(1, dto);
+//
+//        TypedQuery<Item> query = em.createQuery("SELECT i FROM Item i WHERE i.id = :id", Item.class);
+//        Item fromDb = query.setParameter("id", response.getId()).getSingleResult();
+//        ItemOutputDto responseFromDb = mapper.toResponse(fromDb);
+//
+//        assertThat(responseFromDb.getId(), equalTo(response.getId()));
+//    }
 }

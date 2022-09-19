@@ -60,7 +60,7 @@ class RequestMapperTest {
     @Test
     void test2_shouldMapDtoToModel() {
         User user = getTestUser();
-        when(userRefMapper.map(testUserId)).thenReturn(user);
+        when(userRefMapper.idToUser(testUserId)).thenReturn(user);
 
         RequestInputDto testDto = getItemInputDto();
         Request testModel = mapper.dtoToModel(testDto, testUserId);

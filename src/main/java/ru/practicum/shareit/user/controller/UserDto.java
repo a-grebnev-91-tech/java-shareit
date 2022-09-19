@@ -11,6 +11,7 @@ import javax.validation.constraints.Null;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class UserDto {
     @Null(groups = PatchInfo.class)
     private Long id;
@@ -18,6 +19,7 @@ public class UserDto {
     private String name;
     @NotNull(groups = CreateInfo.class, message = "email should not be null")
     @Email(groups = {CreateInfo.class, PatchInfo.class}, message = "email should be valid email address")
+    //TODO исправить после завершения проекта
 //    @UniqueEmail(groups = {CreateInfo.class, PatchInfo.class}) // constraint passed to database for YP postman's tests
     private String email;
 

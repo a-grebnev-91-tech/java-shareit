@@ -50,18 +50,6 @@ class BookingControllerParameterObjectTest {
         assertEquals(orderBy, sortParam[1].trim());
     }
 
-    private BookingParamObj getBookingParamObj() {
-        return BookingParamObj
-                .newBuilder()
-                .from(from)
-                .size(size)
-                .withState(state)
-                .withUserId(userId)
-                .sortBy(sortBy)
-                .sortOrder(orderBy)
-                .build();
-    }
-
     @Test
     void test2_getAllByBookerShouldConvertArgsToParamObj() {
         BookingParamObj paramObj = getBookingParamObj();
@@ -84,5 +72,17 @@ class BookingControllerParameterObjectTest {
         String[] sortParam = capturedParam.getPageable().getSort().toString().split(":");
         assertEquals(sortBy, sortParam[0].trim());
         assertEquals(orderBy, sortParam[1].trim());
+    }
+
+    private BookingParamObj getBookingParamObj() {
+        return BookingParamObj
+                .newBuilder()
+                .from(from)
+                .size(size)
+                .withState(state)
+                .withUserId(userId)
+                .sortBy(sortBy)
+                .sortOrder(orderBy)
+                .build();
     }
 }
