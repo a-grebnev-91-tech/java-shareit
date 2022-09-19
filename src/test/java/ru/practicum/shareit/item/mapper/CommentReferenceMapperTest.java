@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentReferenceMapperTest {
-    private final static Long ITEM_ID = 3L;
+    private static final Long ITEM_ID = 3L;
     @Mock
     private CommentRepository comRepo;
     @Mock

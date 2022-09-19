@@ -145,11 +145,10 @@ class ItemServiceImplTest {
 
     @Test
     void test2_UserAddCommentToUnBookedItem() {
-        Throwable throwable = assertThrows
-                (
-                        NotAvailableException.class,
-                        () -> service.createComment(inDto, ITEM_ID, 999L)
-                );
+        Throwable throwable = assertThrows(
+                NotAvailableException.class,
+                () -> service.createComment(inDto, ITEM_ID, 999L)
+        );
         assertNotNull(throwable.getMessage());
     }
 
