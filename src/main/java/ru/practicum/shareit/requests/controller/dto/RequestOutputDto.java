@@ -1,6 +1,5 @@
 package ru.practicum.shareit.requests.controller.dto;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.item.controller.dto.ItemOutputDto;
