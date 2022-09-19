@@ -18,7 +18,6 @@ import ru.practicum.shareit.requests.domain.RequestService;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
