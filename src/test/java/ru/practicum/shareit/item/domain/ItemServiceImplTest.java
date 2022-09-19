@@ -16,6 +16,7 @@ import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.ForbiddenOperationException;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.PatchException;
 import ru.practicum.shareit.item.ItemsParamObject;
 import ru.practicum.shareit.item.controller.dto.*;
 import ru.practicum.shareit.item.mapper.CommentMapper;
@@ -202,6 +203,9 @@ class ItemServiceImplTest {
         assertNotNull(dto);
         assertEquals(ITEM_ID, dto.getId());
         assertEquals(patch.getDescription(), dto.getDescription());
+
+        when(patcher.patch(any(), any())).thenReturn(false);
+        assertThrows(PatchException.class, () -> service.patchItem(USER_ID, ITEM_ID, patch));
     }
 
     @Test

@@ -30,8 +30,8 @@ class ItemReferenceMapperTest {
 
         Mockito.when(repo.findById(validId)).thenReturn(Optional.of(item));
 
-        assertEquals(item, mapper.map(validId));
-        NotFoundException ex = assertThrows(NotFoundException.class, () -> mapper.map(invalidId));
+        assertEquals(item, mapper.idToItem(validId));
+        NotFoundException ex = assertThrows(NotFoundException.class, () -> mapper.idToItem(invalidId));
         assertEquals(String.format("Item with id %d isn't exist", invalidId), ex.getMessage());
 
         Mockito.verify(repo).findById(validId);
@@ -45,6 +45,6 @@ class ItemReferenceMapperTest {
         Item item = new Item();
         item.setId(id);
 
-        assertEquals(id, mapper.map(item));
+        assertEquals(id, mapper.itemToId(item));
     }
 }

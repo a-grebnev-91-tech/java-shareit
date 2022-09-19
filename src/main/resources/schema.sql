@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS item_requests
     requester_id BIGINT REFERENCES users (id) ON DELETE CASCADE,
     created      TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT description_is_not_empty CHECK (description IS NOT NULL AND description <> ''),
-    CONSTRAINT created_is_not_null CHECK (created IS NOT NULL)
+    CONSTRAINT item_requests_created_is_not_null CHECK (created IS NOT NULL)
 );
 
 CREATE INDEX IF NOT EXISTS item_requests_indexes ON item_requests (description, requester_id);
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS comments
     author_id BIGINT REFERENCES users (id) ON DELETE CASCADE,
     created   TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT text_is_not_empty CHECK (text IS NOT NULL AND text <> ''),
-    CONSTRAINT created_is_not_null CHECK (created IS NOT NULL)
+    CONSTRAINT comments_created_is_not_null CHECK (created IS NOT NULL)
 );
 
 CREATE INDEX IF NOT EXISTS comments_indexes ON comments (item_id, author_id);

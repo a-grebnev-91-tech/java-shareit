@@ -40,7 +40,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)
-    protected ResponseEntity<Object> handleConflictEmail(ConstraintViolationException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
         log.warn("Constraint violation: {}", ex.getMessage());
         return getResponseEntity(ex, request, HttpStatus.BAD_REQUEST);
     }
