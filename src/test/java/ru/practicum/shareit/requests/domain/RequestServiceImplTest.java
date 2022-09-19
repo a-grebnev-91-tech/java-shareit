@@ -6,7 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.requests.controller.dto.RequestInputDto;
+import ru.practicum.shareit.requests.controller.dto.RequestOutputDto;
 import ru.practicum.shareit.requests.mapper.RequestMapper;
 import ru.practicum.shareit.requests.repository.RequestRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -17,6 +21,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class RequestServiceImplTest {
     private static final Long USER_ID = 1L;
     private static final Long OUT_USER_ID = 2L;
@@ -67,5 +72,28 @@ class RequestServiceImplTest {
         assertThrows(NotFoundException.class, () -> service.getRequestById(OUT_USER_ID, REQUEST_ID));
 
         assertThrows(NotFoundException.class, () -> service.getRequestById(USER_ID, 999L));
+    }
+
+    @Test
+    void createRequest() {
+        RequestInputDto inDto = new RequestInputDto();
+        inDto.setDescription("descr");
+
+        Request model = new Request();
+        model.setId(1L);
+        model.setDescription("descr");
+
+        RequestOutputDto outDto = new RequestOutputDto();
+        outDto.setId(1L);
+        outDto.setDescription("descr");
+
+        when(requestRepo.save(any())).thenReturn(model);
+        when(requestMapper.dtoToModel(any(), anyLong())).thenReturn(model);
+        when(requestMapper.modelToDto(any())).thenReturn(outDto);
+
+        RequestOutputDto dto = service.createRequest(1L, inDto);
+        assertNotNull(dto);
+        assertEquals(1, dto.getId());
+        assertEquals("descr", dto.getDescription());
     }
 }

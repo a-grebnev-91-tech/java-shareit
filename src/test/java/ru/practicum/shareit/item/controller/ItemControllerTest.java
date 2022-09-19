@@ -10,12 +10,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.MissingRequestHeaderException;
+import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.controller.dto.CommentInputDto;
 import ru.practicum.shareit.item.controller.dto.CommentOutputDto;
 import ru.practicum.shareit.item.controller.dto.ItemInputDto;
 import ru.practicum.shareit.item.controller.dto.ItemOutputDto;
 import ru.practicum.shareit.item.domain.ItemService;
 
+import javax.validation.ConstraintViolationException;
 import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.Matchers.is;
@@ -136,5 +139,103 @@ class ItemControllerTest {
                 .andExpect(jsonPath("$.id", is(outputDto.getId()), Long.class))
                 .andExpect(jsonPath("$.name", is(outputDto.getName()), String.class))
                 .andExpect(jsonPath("$.description", is(outputDto.getDescription()), String.class));
+    }
+
+    @Test
+    void test6_throwEx() throws Exception {
+        when(service.patchItem(anyLong(), anyLong(), any()))
+                .thenThrow(new ConstraintViolationException("message", null));
+
+        mvc.perform(patch("/items/1")
+                        .content(mapper.writeValueAsString(inputDto))
+                        .header(USER_ID_HEADER, USER_ID)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void test7_throwEx() throws Exception {
+        when(service.patchItem(anyLong(), anyLong(), any()))
+                .thenThrow(new ConflictEmailException("message"));
+
+        mvc.perform(patch("/items/1")
+                        .content(mapper.writeValueAsString(inputDto))
+                        .header(USER_ID_HEADER, USER_ID)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void test8_throwEx() throws Exception {
+        when(service.patchItem(anyLong(), anyLong(), any()))
+                .thenThrow(new ForbiddenOperationException("message"));
+
+        mvc.perform(patch("/items/1")
+                        .content(mapper.writeValueAsString(inputDto))
+                        .header(USER_ID_HEADER, USER_ID)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void test9_throwEx() throws Exception {
+        when(service.patchItem(anyLong(), anyLong(), any()))
+                .thenThrow(new IllegalArgumentException("message"));
+
+        mvc.perform(patch("/items/1")
+                        .content(mapper.writeValueAsString(inputDto))
+                        .header(USER_ID_HEADER, USER_ID)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void test10_throwEx() throws Exception {
+        when(service.patchItem(anyLong(), anyLong(), any()))
+                .thenThrow(new NotAvailableException("message"));
+
+        mvc.perform(patch("/items/1")
+                        .content(mapper.writeValueAsString(inputDto))
+                        .header(USER_ID_HEADER, USER_ID)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void test11_throwEx() throws Exception {
+        when(service.patchItem(anyLong(), anyLong(), any()))
+                .thenThrow(new BookingStateIsNotSupportedException("message"));
+
+        mvc.perform(patch("/items/1")
+                        .content(mapper.writeValueAsString(inputDto))
+                        .header(USER_ID_HEADER, USER_ID)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void test12_throwEx() throws Exception {
+        when(service.patchItem(anyLong(), anyLong(), any()))
+                .thenThrow(new PatchException("message"));
+
+        mvc.perform(patch("/items/1")
+                        .content(mapper.writeValueAsString(inputDto))
+                        .header(USER_ID_HEADER, USER_ID)
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }
