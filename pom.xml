@@ -129,7 +129,7 @@
                     <version>3.1.2</version>
                     <configuration>
                         <configLocation>checkstyle.xml</configLocation>
-                        <failOnViolation>false</failOnViolation>
+                        <failOnViolation>true</failOnViolation>
                         <logViolationsToConsole>false</logViolationsToConsole>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     </configuration>
