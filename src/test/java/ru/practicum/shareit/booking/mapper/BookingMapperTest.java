@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.practicum.shareit.booking.controller.dto.BookingForItemDto;
 import ru.practicum.shareit.booking.controller.dto.BookingInputDto;
 import ru.practicum.shareit.booking.controller.dto.BookingOutputDto;
 import ru.practicum.shareit.booking.domain.Booking;
@@ -100,13 +99,4 @@ class BookingMapperTest {
         assertEquals(USER_ID, fromMapper.get(0).getBooker().getId());
         assertEquals(ITEM_ID, fromMapper.get(0).getItem().getId());
     }
-
-    //TODO REMOVE
-//    @Test
-//    void test4_updateBookingForItemFromBooking() {
-//        BookingForItemDto dto = new BookingForItemDto();
-//        mapper.itemToBookedItemDto(new Item());
-//        assertNotNull(dto.getId());
-//        assertEquals(model.getId(), dto.getId());
-//    }
 }
