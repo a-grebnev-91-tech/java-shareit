@@ -26,8 +26,7 @@ public interface ItemMapper {
     Item toModel(ItemInputDto dto, Long ownerId);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "id", target = "lastBooking")
-    @Mapping(source = "id", target = "nextBooking")
+    @Mapping(source = "id", target = "closestBookings")
     @Mapping(source = "id", target = "comments")
     ItemForOwnerOutputDto toOwnerResponse(Item model);
 

@@ -7,8 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.booking.controller.dto.BookingForItemDto;
-import ru.practicum.shareit.booking.controller.dto.LastBookingDto;
-import ru.practicum.shareit.booking.controller.dto.NextBookingDto;
+import ru.practicum.shareit.booking.controller.dto.ClosestBookings;
 import ru.practicum.shareit.booking.domain.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.item.domain.Item;
@@ -45,15 +44,15 @@ class BookingReferenceMapperTest {
         item.setId(ITEM_ID);
         item.setOwner(user);
 
-        doAnswer(invocationOnMock -> {
+        when(mapper.modelToForItemDto(any())).thenAnswer(invocationOnMock -> {
             Booking booking = invocationOnMock.getArgument(0, Booking.class);
-            BookingForItemDto dto = invocationOnMock.getArgument(1, BookingForItemDto.class);
+            BookingForItemDto dto = new BookingForItemDto();
             dto.setId(booking.getId());
             dto.setBookerId(booking.getBooker().getId());
             dto.setStart(booking.getStart());
             dto.setEnd(booking.getEnd());
-            return null;
-        }).when(mapper).updateBookingForItemFromBooking(any(), any());
+            return dto;
+        });
     }
 
     @Test
@@ -63,20 +62,21 @@ class BookingReferenceMapperTest {
         Booking secondBooking = getBookingByDate(2, 2);
         futureBookings.add(firstBooking);
         futureBookings.add(secondBooking);
-        when(repo.findByItemId(ITEM_ID)).thenReturn(futureBookings);
+        when(repo.findByAvailableItem(ITEM_ID)).thenReturn(futureBookings);
 
-        LastBookingDto nullDto = refMapper.mapToLast(ITEM_ID);
-        assertNull(nullDto);
-        verify(repo).findByItemId(ITEM_ID);
-
-        NextBookingDto dto = refMapper.mapToNext(ITEM_ID);
+        ClosestBookings dto = refMapper.itemIdToClosestBooking(ITEM_ID);
         assertNotNull(dto);
-        assertEquals(firstBooking.getId(), dto.getId());
-        assertEquals(firstBooking.getItem().getOwner().getId(), dto.getBookerId());
-        assertEquals(firstBooking.getStart(), dto.getStart());
-        assertEquals(firstBooking.getEnd(), dto.getEnd());
+        assertNull(dto.getLastBooking());
+        verify(repo).findByAvailableItem(ITEM_ID);
 
-        verify(repo, times(2)).findByItemId(ITEM_ID);
+        BookingForItemDto forItemDto = dto.getNextBooking();
+        assertNotNull(forItemDto);
+        assertEquals(firstBooking.getId(), forItemDto.getId());
+        assertEquals(firstBooking.getItem().getOwner().getId(), forItemDto.getBookerId());
+        assertEquals(firstBooking.getStart(), forItemDto.getStart());
+        assertEquals(firstBooking.getEnd(), forItemDto.getEnd());
+
+        verify(repo).findByAvailableItem(ITEM_ID);
         verifyNoMoreInteractions(repo);
     }
 
@@ -87,20 +87,21 @@ class BookingReferenceMapperTest {
         Booking secondBooking = getBookingByDate(2, -2);
         pastBookings.add(firstBooking);
         pastBookings.add(secondBooking);
-        when(repo.findByItemId(ITEM_ID)).thenReturn(pastBookings);
+        when(repo.findByAvailableItem(ITEM_ID)).thenReturn(pastBookings);
 
-        LastBookingDto dto = refMapper.mapToLast(ITEM_ID);
+        ClosestBookings dto = refMapper.itemIdToClosestBooking(ITEM_ID);
         assertNotNull(dto);
-        assertEquals(firstBooking.getId(), dto.getId());
-        assertEquals(firstBooking.getItem().getOwner().getId(), dto.getBookerId());
-        assertEquals(firstBooking.getStart(), dto.getStart());
-        assertEquals(firstBooking.getEnd(), dto.getEnd());
-        verify(repo).findByItemId(ITEM_ID);
 
-        NextBookingDto nullDto = refMapper.mapToNext(ITEM_ID);
-        assertNull(nullDto);
+        assertNotNull(dto.getLastBooking());
+        assertEquals(firstBooking.getId(), dto.getLastBooking().getId());
+        assertEquals(firstBooking.getItem().getOwner().getId(), dto.getLastBooking().getBookerId());
+        assertEquals(firstBooking.getStart(), dto.getLastBooking().getStart());
+        assertEquals(firstBooking.getEnd(), dto.getLastBooking().getEnd());
+        verify(repo).findByAvailableItem(ITEM_ID);
 
-        verify(repo, times(2)).findByItemId(ITEM_ID);
+        assertNull(dto.getNextBooking());
+
+        verify(repo).findByAvailableItem(ITEM_ID);
         verifyNoMoreInteractions(repo);
     }
 
@@ -111,24 +112,27 @@ class BookingReferenceMapperTest {
         Booking futureBooking = getBookingByDate(2, 1);
         bookings.add(pastBooking);
         bookings.add(futureBooking);
-        when(repo.findByItemId(ITEM_ID)).thenReturn(bookings);
+        when(repo.findByAvailableItem(ITEM_ID)).thenReturn(bookings);
 
-        LastBookingDto lastDto = refMapper.mapToLast(ITEM_ID);
+        ClosestBookings dto = refMapper.itemIdToClosestBooking(ITEM_ID);
+        assertNotNull(dto);
+
+        BookingForItemDto lastDto = dto.getLastBooking();
         assertNotNull(lastDto);
         assertEquals(pastBooking.getId(), lastDto.getId());
         assertEquals(pastBooking.getItem().getOwner().getId(), lastDto.getBookerId());
         assertEquals(pastBooking.getStart(), lastDto.getStart());
         assertEquals(pastBooking.getEnd(), lastDto.getEnd());
-        verify(repo).findByItemId(ITEM_ID);
+        verify(repo).findByAvailableItem(ITEM_ID);
 
-        NextBookingDto nextDto = refMapper.mapToNext(ITEM_ID);
+        BookingForItemDto nextDto = dto.getNextBooking();
         assertNotNull(nextDto);
         assertEquals(futureBooking.getId(), nextDto.getId());
         assertEquals(futureBooking.getItem().getOwner().getId(), nextDto.getBookerId());
         assertEquals(futureBooking.getStart(), nextDto.getStart());
         assertEquals(futureBooking.getEnd(), nextDto.getEnd());
 
-        verify(repo, times(2)).findByItemId(ITEM_ID);
+        verify(repo).findByAvailableItem(ITEM_ID);
         verifyNoMoreInteractions(repo);
     }
 

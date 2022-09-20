@@ -6,8 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.practicum.shareit.booking.controller.dto.LastBookingDto;
-import ru.practicum.shareit.booking.controller.dto.NextBookingDto;
+import ru.practicum.shareit.booking.controller.dto.BookingForItemDto;
+import ru.practicum.shareit.booking.controller.dto.ClosestBookings;
 import ru.practicum.shareit.booking.mapper.BookingReferenceMapper;
 import ru.practicum.shareit.item.controller.dto.CommentOutputDto;
 import ru.practicum.shareit.item.controller.dto.ItemForOwnerOutputDto;
@@ -58,8 +58,8 @@ class ItemMapperTest {
     private Item model;
     private ItemForOwnerOutputDto ownerOutDto;
     private ItemOutputDto outDto;
-    private LastBookingDto lastBookDto;
-    private NextBookingDto nextBookDto;
+    private BookingForItemDto lastBookDto;
+    private BookingForItemDto nextBookDto;
     private Comment comment;
     private CommentOutputDto commentOutDto;
     private Request request;
@@ -86,10 +86,10 @@ class ItemMapperTest {
         inDto.setDescription(ITEM_DESCRIPTION);
         inDto.setAvailable(ITEM_AVAILABLE);
 
-        nextBookDto = new NextBookingDto();
+        nextBookDto = new BookingForItemDto();
         nextBookDto.setId(NEXT_BOOKING_ID);
 
-        lastBookDto = new LastBookingDto();
+        lastBookDto = new BookingForItemDto();
         lastBookDto.setId(LAST_BOOKING_ID);
 
         commentOutDto = new CommentOutputDto();
@@ -138,8 +138,8 @@ class ItemMapperTest {
 
     @Test
     void test2_toOwnerResponse() {
-        when(bookingReferenceMapper.mapToLast(ITEM_ID)).thenReturn(lastBookDto);
-        when(bookingReferenceMapper.mapToNext(ITEM_ID)).thenReturn(nextBookDto);
+        ClosestBookings closestBookings = new ClosestBookings(lastBookDto, nextBookDto);
+        when(bookingReferenceMapper.itemIdToClosestBooking(ITEM_ID)).thenReturn(closestBookings);
         when(commentReferenceMapper.map(ITEM_ID)).thenReturn(List.of(commentOutDto));
 
         ItemForOwnerOutputDto fromMapper = mapper.toOwnerResponse(model);

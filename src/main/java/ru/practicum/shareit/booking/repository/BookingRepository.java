@@ -32,7 +32,7 @@ public interface BookingRepository {
 
     Optional<Booking> findById(Long bookingId);
 
-    List<Booking> findByItemId(Long itemId);
+    List<Booking> findByAvailableItem(Long itemId);
 
     Booking save(Booking booking);
 }

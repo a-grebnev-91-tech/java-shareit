@@ -9,8 +9,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import ru.practicum.shareit.booking.controller.dto.LastBookingDto;
-import ru.practicum.shareit.booking.controller.dto.NextBookingDto;
+import ru.practicum.shareit.booking.controller.dto.BookingForItemDto;
+import ru.practicum.shareit.booking.controller.dto.ClosestBookings;
 import ru.practicum.shareit.booking.domain.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.ForbiddenOperationException;
@@ -83,8 +83,7 @@ class ItemServiceImplTest {
         patch.setDescription("patch descr");
         itemOutOwnerDto = new ItemForOwnerOutputDto();
         itemOutOwnerDto.setId(ITEM_ID);
-        itemOutOwnerDto.setLastBooking(new LastBookingDto());
-        itemOutOwnerDto.setNextBooking(new NextBookingDto());
+        itemOutOwnerDto.setClosestBookings(new ClosestBookings(new BookingForItemDto(), new BookingForItemDto()));
         itemOutOwnerDto.setDescription(patch.getDescription());
         when(itemRepo.findByNameAndDescription(paramObject.getText(), paramObject.getPageable()))
                 .thenReturn(List.of(item));

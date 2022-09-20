@@ -60,6 +60,10 @@ public interface JpaBookingRepository extends JpaRepository<Booking, Long>, Book
         return findAllPastByOwner(ownerId, LocalDateTime.now(), pageable);
     }
 
+    @Override
+    @Query("SELECT b FROM Booking AS b WHERE b.item.id = ?1 AND b.item.available = true ORDER BY b.start")
+    List<Booking> findByAvailableItem(Long itemId);
+
     List<Booking> findAllByBookerIdAndEndIsBefore(Long id, LocalDateTime now, Pageable pageable);
 
     List<Booking> findAllByBookerIdAndStartIsAfter(Long bookerId, LocalDateTime now, Pageable pageable);

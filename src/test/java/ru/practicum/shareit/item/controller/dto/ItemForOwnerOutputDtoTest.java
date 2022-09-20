@@ -116,17 +116,19 @@ class ItemForOwnerOutputDtoTest {
         List<CommentOutputDto> comments = new ArrayList<>();
         comments.add(comDto);
 
-        LastBookingDto lastBookDto = new LastBookingDto();
+        BookingForItemDto lastBookDto = new BookingForItemDto();
         lastBookDto.setId(lastBookingId);
         lastBookDto.setBookerId(lastBookingBookerId);
         lastBookDto.setStart(lastBookingStart);
         lastBookDto.setEnd(lastBookingEnd);
 
-        NextBookingDto nextBookDto = new NextBookingDto();
+        BookingForItemDto nextBookDto = new BookingForItemDto();
         nextBookDto.setId(nextBookingId);
         nextBookDto.setBookerId(nextBookingBookerId);
         nextBookDto.setStart(nextBookingStart);
         nextBookDto.setEnd(nextBookingEnd);
+
+        ClosestBookings closestBookings = new ClosestBookings(lastBookDto, nextBookDto);
 
         ItemForOwnerOutputDto dto = new ItemForOwnerOutputDto();
         dto.setId(id);
@@ -134,8 +136,7 @@ class ItemForOwnerOutputDtoTest {
         dto.setDescription(description);
         dto.setAvailable(available);
         dto.setRequestId(requestId);
-        dto.setLastBooking(lastBookDto);
-        dto.setNextBooking(nextBookDto);
+        dto.setClosestBookings(closestBookings);
         dto.setComments(comments);
 
         return dto;
