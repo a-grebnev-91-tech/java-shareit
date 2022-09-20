@@ -77,7 +77,7 @@ public interface JpaBookingRepository extends JpaRepository<Booking, Long>, Book
     @Query("SELECT b FROM Booking AS b WHERE b.booker.id = ?1 AND b.item.id = ?2 AND b.end < ?3")
     List<Booking> findAllCompletedByBookerAndItem(Long bookerId, Long itemId, LocalDateTime now);
 
-    @Query(value = "SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.start < ?2 AND b.end > ?2")
+    @Query(value = "SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND (?2 BETWEEN b.start AND b.end)")
     List<Booking> findAllCurrentByOwner(Long ownerId, LocalDateTime now, Pageable pageable);
 
     @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.end < ?2")

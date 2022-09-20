@@ -49,9 +49,9 @@ class BookingInputValidationTest {
                 Arguments.of(validId, futureStart, futureEnd, 0, "all fields is ok"),
                 Arguments.of(null, futureStart, futureEnd, 1, "item id is null"),
                 Arguments.of(validId, pastDate, futureEnd, 1, "start date in past"),
-                Arguments.of(validId, null, futureEnd, 1, "start date is null"),
+                Arguments.of(validId, null, futureEnd, 2, "start date is null"),
                 Arguments.of(validId, futureStart, pastDate, 2, "end date in past"),
-                Arguments.of(validId, futureStart, null, 1, "end date is null"),
+                Arguments.of(validId, futureStart, null, 2, "end date is null"),
                 Arguments.of(validId, futureEnd, futureStart, 1, "start date is after end date")
         );
     }

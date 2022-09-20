@@ -14,7 +14,7 @@ public class EndAfterStartValidator implements ConstraintValidator<EndAfterStart
         LocalDateTime start = bookingInputDto.getStart();
         LocalDateTime end = bookingInputDto.getEnd();
         if (start == null || end == null)
-            return true;
+            return false;
         return end.isAfter(start);
     }
 }

@@ -132,7 +132,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void checkUserExisting(Long userId) {
-        if (userId == null) throw new NotAvailableException("User id should not be null");
         if (!userRepository.existsById(userId))
             throw new NotFoundException(String.format("User with id %d isn't exist", userId));
     }

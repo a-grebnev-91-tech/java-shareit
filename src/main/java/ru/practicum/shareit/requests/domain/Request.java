@@ -17,14 +17,14 @@ public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "description")
+    @Column(name = "description", nullable = false, length = 2500)
     private String description;
     @ManyToOne
     @JoinColumn(name = "requester_id")
     private User requester;
-    @Column(name = "created")
+    @Column(name = "created", nullable = false)
     private LocalDateTime created = LocalDateTime.now();
     @OneToMany
     @JoinColumn(name = "request_id")
-    List<Item> responses;
+    private List<Item> responses;
 }

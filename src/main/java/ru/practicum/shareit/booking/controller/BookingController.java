@@ -12,6 +12,8 @@ import ru.practicum.shareit.util.validation.ValidSortOrder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import java.util.List;
 
@@ -49,8 +51,8 @@ public class BookingController {
     public List<BookingOutputDto> getAllByBooker(
             @RequestHeader(USER_ID_HEADER) Long userId,
             @RequestParam(value = "state", defaultValue = BOOKING_DEFAULT_STATE) String state,
-            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
-            @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
+            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(name = "size", defaultValue = "20") @Positive Integer size,
             @RequestParam(value = "sortBy", defaultValue = BOOKING_DEFAULT_SORT_BY) String sortBy,
             @RequestParam(value = "order", defaultValue = BOOKING_DEFAULT_ORDER) @ValidSortOrder String order
     ) {

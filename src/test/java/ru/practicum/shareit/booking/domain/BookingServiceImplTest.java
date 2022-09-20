@@ -304,10 +304,9 @@ class BookingServiceImplTest {
     void test22_nullBookerAttemptToGetAllHisBookingsByState() {
         BookingParamObj paramObj = BookingParamObj.newBuilder().withUserId(null).withState("ALL").build();
         Throwable throwable = assertThrows(
-                NotAvailableException.class,
+                NullPointerException.class,
                 () -> service.getAllBookingsByBooker(paramObj)
         );
-        assertNotNull(throwable.getMessage());
     }
 
     @Test
@@ -462,10 +461,9 @@ class BookingServiceImplTest {
     void test30_nullOwnerAttemptToGetAllHisBookingsByState() {
         BookingParamObj paramObj = BookingParamObj.newBuilder().withUserId(null).withState("ALL").build();
         Throwable throwable = assertThrows(
-                NotAvailableException.class,
+                NullPointerException.class,
                 () -> service.getAllBookingsByOwner(paramObj)
         );
-        assertNotNull(throwable.getMessage());
     }
 
     @Test

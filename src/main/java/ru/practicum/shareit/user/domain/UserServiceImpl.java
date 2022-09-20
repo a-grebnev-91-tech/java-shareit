@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     public UserDto patchUser(long userId, UserDto patch) {
         User existingUser = getUserOrThrow(userId);
         if (patcher.patch(existingUser, patch)) {
-            return userMapper.toDto(repository.save(existingUser));
+            return userMapper.toDto(existingUser);
         } else {
             throw new PatchException(String.format("Patch %s couldn't be applied on %s", patch, existingUser));
         }

@@ -15,7 +15,8 @@ import ru.practicum.shareit.util.validation.groups.CreateInfo;
 import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 import static ru.practicum.shareit.item.ItemsParamObject.ITEMS_DEFAULT_ORDER;
@@ -23,6 +24,7 @@ import static ru.practicum.shareit.item.ItemsParamObject.ITEMS_DEFAULT_SORT_BY;
 import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -51,8 +53,8 @@ public class ItemController {
     @GetMapping
     public List<ItemOutputDto> getAll(
             @RequestHeader(value = USER_ID_HEADER) long userId,
-            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
-            @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
+            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(name = "size", defaultValue = "20") @Positive Integer size,
             @RequestParam(value = "sortBy", defaultValue = ITEMS_DEFAULT_SORT_BY) String sortBy,
             @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER) @ValidSortOrder String order
     ) {
@@ -82,8 +84,8 @@ public class ItemController {
     public List<ItemOutputDto> searchItems(
             @RequestParam String text,
             @RequestHeader(value = USER_ID_HEADER) long userId,
-            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
-            @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
+            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(name = "size", defaultValue = "20") @Positive Integer size,
             @RequestParam(value = "sortBy", defaultValue = ITEMS_DEFAULT_SORT_BY) String sortBy,
             @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER) @ValidSortOrder String order
     ) {

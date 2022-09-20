@@ -2,21 +2,24 @@ package ru.practicum.shareit.requests.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.requests.controller.dto.RequestInputDto;
 import ru.practicum.shareit.requests.controller.dto.RequestOutputDto;
 import ru.practicum.shareit.requests.domain.RequestService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import java.util.List;
 
 import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
-@RequiredArgsConstructor
 @Slf4j
+@Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/requests")
 public class RequestController {
     private final RequestService service;
@@ -32,8 +35,8 @@ public class RequestController {
 
     @GetMapping("/all")
     public List<RequestOutputDto> getAllRequestsButUser(
-            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
-            @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
+            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+            @RequestParam(name = "size", defaultValue = "20") @Positive Integer size,
             @RequestHeader(USER_ID_HEADER) Long userId
     ) {
         log.info("Obtaining all requests from {} size {} by user with id {}", from, size, userId);
@@ -55,3 +58,4 @@ public class RequestController {
         return service.getAllRequestsByUser(userId);
     }
 }
+

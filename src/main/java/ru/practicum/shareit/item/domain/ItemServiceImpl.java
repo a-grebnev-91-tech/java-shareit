@@ -92,7 +92,7 @@ public class ItemServiceImpl implements ItemService {
         Item existingItem = getItemOrThrow(itemId);
         if (isItemBelongToUser(existingItem, userId)) {
             if (patcher.patch(existingItem, patch)) {
-                return itemMapper.toResponse(itemRepository.save(existingItem));
+                return itemMapper.toResponse(existingItem);
             } else {
                 throw new PatchException(String.format("Patch %s couldn't be applied on %s", patch, existingItem));
             }
