@@ -8,18 +8,19 @@ import ru.practicum.shareit.booking.BookingParamObj;
 import ru.practicum.shareit.booking.controller.dto.BookingOutputDto;
 import ru.practicum.shareit.booking.controller.dto.BookingInputDto;
 import ru.practicum.shareit.booking.domain.BookingService;
+import ru.practicum.shareit.util.Constants;
 import ru.practicum.shareit.util.validation.ValidSortOrder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 
 import java.util.List;
 
 import static ru.practicum.shareit.booking.BookingParamObj.BOOKING_DEFAULT_STATE;
 import static ru.practicum.shareit.booking.BookingParamObj.BOOKING_DEFAULT_SORT_BY;
 import static ru.practicum.shareit.booking.BookingParamObj.BOOKING_DEFAULT_ORDER;
+import static ru.practicum.shareit.util.Constants.BOOKING_DEFAULT_ORDER;
+import static ru.practicum.shareit.util.Constants.BOOKING_DEFAULT_SORT_BY;
 import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
 @Slf4j
@@ -50,11 +51,11 @@ public class BookingController {
     @GetMapping
     public List<BookingOutputDto> getAllByBooker(
             @RequestHeader(USER_ID_HEADER) Long userId,
-            @RequestParam(value = "state", defaultValue = BOOKING_DEFAULT_STATE) String state,
-            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-            @RequestParam(name = "size", defaultValue = "20") @Positive Integer size,
-            @RequestParam(value = "sortBy", defaultValue = BOOKING_DEFAULT_SORT_BY) String sortBy,
-            @RequestParam(value = "order", defaultValue = BOOKING_DEFAULT_ORDER) @ValidSortOrder String order
+            @RequestParam(value = "state") String state,
+            @RequestParam(name = "from") Integer from,
+            @RequestParam(name = "size") Integer size,
+            @RequestParam(value = "sortBy") String sortBy,
+            @RequestParam(value = "order") String order
     ) {
         log.info(
                 "Booker with id {} attempt to get all his bookings with state {} order by {} {}",
@@ -71,7 +72,7 @@ public class BookingController {
     @GetMapping("owner")
     public List<BookingOutputDto> getAllByOwner(
             @RequestHeader(USER_ID_HEADER) Long userId,
-            @RequestParam(value = "state", defaultValue = "ALL") String state,
+            @RequestParam(value = "state", defaultValue = Constants.BOOKING_DEFAULT_STATE) String state,
             @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
             @RequestParam(name = "size", defaultValue = "20") @Min(1) Integer size,
             @RequestParam(value = "sortBy", defaultValue = BOOKING_DEFAULT_SORT_BY) String sortBy,

@@ -10,17 +10,13 @@ import ru.practicum.shareit.booking.domain.BookingsState;
 import ru.practicum.shareit.exception.BookingStateIsNotSupportedException;
 import ru.practicum.shareit.requests.repository.OffsetPageable;
 
+import static ru.practicum.shareit.util.Constants.*;
+
 @Getter
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
 public class BookingParamObj {
-    public static final String BOOKING_DEFAULT_SORT_BY = "start";
-    public static final String BOOKING_DEFAULT_ORDER = "DESC";
-    public static final String BOOKING_DEFAULT_STATE = "ALL";
-    public static final int BOOKING_DEFAULT_OFFSET = 0;
-    public static final int BOOKING_DEFAULT_SIZE = 20;
-
     private final Long userId;
     private final BookingsState state;
     private final Pageable pageable;

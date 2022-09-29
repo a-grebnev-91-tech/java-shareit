@@ -27,11 +27,20 @@ public class BookingClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getBookings(long userId, BookingState state, Integer from, Integer size) {
+    public ResponseEntity<Object> getBookings(
+            long userId,
+            BookingState state,
+            Integer from,
+            Integer size,
+            String sortBy,
+            String order
+    ) {
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "from", from,
-                "size", size
+                "size", size,
+                "sortBy", sortBy,
+                "order", order
         );
         return get("?state={state}&from={from}&size={size}", userId, parameters);
     }
