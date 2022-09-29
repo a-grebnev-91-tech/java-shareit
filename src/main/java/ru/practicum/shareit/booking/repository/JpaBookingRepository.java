@@ -1,6 +1,6 @@
 package ru.practicum.shareit.booking.repository;
 
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,21 +13,21 @@ import java.util.List;
 @Repository
 public interface JpaBookingRepository extends JpaRepository<Booking, Long>, BookingRepository {
     @Override
-    default List<Booking> findAllComingByBooker(Long bookerId, Sort sort) {
-        return findAllByBookerIdAndStartIsAfter(bookerId, LocalDateTime.now(), sort);
+    default List<Booking> findAllComingByBooker(Long bookerId, Pageable pageable) {
+        return findAllByBookerIdAndStartIsAfter(bookerId, LocalDateTime.now(), pageable);
     }
 
     @Override
-    @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.status = ?2 ORDER BY b.start DESC")
-    List<Booking> findAllByOwnerAndStatus(Long ownerId, BookingStatus status);
+    @Query(value = "SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.status = ?2")
+    List<Booking> findAllByOwnerIdAndStatus(Long ownerId, BookingStatus status, Pageable pageable);
 
     @Override
-    @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 ORDER BY b.start DESC")
-    List<Booking> findAllByOwnerId(Long ownerId);
+    @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1")
+    List<Booking> findAllByOwnerId(Long ownerId, Pageable pageable);
 
     @Override
-    default List<Booking> findAllComingByOwner(Long ownerId) {
-        return findAllComingByOwner(ownerId, LocalDateTime.now());
+    default List<Booking> findAllComingByOwnerId(Long ownerId, Pageable pageable) {
+        return findAllComingByOwner(ownerId, LocalDateTime.now(), pageable);
     }
 
     @Override
@@ -36,46 +36,54 @@ public interface JpaBookingRepository extends JpaRepository<Booking, Long>, Book
     }
 
     @Override
-    default List<Booking> findAllCurrentByBooker(Long bookerId, Sort sort) {
-        return findAllByBookerIdAndStartIsBeforeAndEndIsAfter(bookerId, LocalDateTime.now(), LocalDateTime.now(), sort);
+    default List<Booking> findAllCurrentByBooker(Long bookerId, Pageable pageable) {
+        return findAllByBookerIdAndStartIsBeforeAndEndIsAfter(
+                bookerId,
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                pageable
+        );
     }
 
     @Override
-    default List<Booking> findAllCurrentByOwner(Long ownerId) {
-        return findAllCurrentByOwner(ownerId, LocalDateTime.now());
+    default List<Booking> findAllCurrentByOwnerId(Long ownerId, Pageable pageable) {
+        return findAllCurrentByOwner(ownerId, LocalDateTime.now(), pageable);
     }
 
     @Override
-    default List<Booking> findAllPastByBooker(Long bookerId, Sort sort) {
-        return findAllByBookerIdAndEndIsBefore(bookerId, LocalDateTime.now(), sort);
+    default List<Booking> findAllPastByBooker(Long bookerId, Pageable pageable) {
+        return findAllByBookerIdAndEndIsBefore(bookerId, LocalDateTime.now(), pageable);
     }
 
     @Override
-    @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.end < ?2 ORDER BY b.start DESC")
-    default List<Booking> findAllPastByOwner(Long ownerId) {
-        return findAllPastByOwner(ownerId, LocalDateTime.now());
+    default List<Booking> findAllPastByOwnerId(Long ownerId, Pageable pageable) {
+        return findAllPastByOwner(ownerId, LocalDateTime.now(), pageable);
     }
 
-    List<Booking> findAllByBookerIdAndEndIsBefore(Long id, LocalDateTime now, Sort sort);
+    @Override
+    @Query("SELECT b FROM Booking AS b WHERE b.item.id = ?1 AND b.item.available = true ORDER BY b.start")
+    List<Booking> findByAvailableItem(Long itemId);
 
-    List<Booking> findAllByBookerIdAndStartIsAfter(Long bookerId, LocalDateTime now, Sort sort);
+    List<Booking> findAllByBookerIdAndEndIsBefore(Long id, LocalDateTime now, Pageable pageable);
+
+    List<Booking> findAllByBookerIdAndStartIsAfter(Long bookerId, LocalDateTime now, Pageable pageable);
 
     List<Booking> findAllByBookerIdAndStartIsBeforeAndEndIsAfter(
             Long bookerId,
             LocalDateTime nowForStart,
             LocalDateTime nowForEnd,
-            Sort sort
+            Pageable pageable
     );
 
-    @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.start > ?2 ORDER BY b.start DESC")
-    List<Booking> findAllComingByOwner(Long ownerId, LocalDateTime now);
+    @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.start > ?2")
+    List<Booking> findAllComingByOwner(Long ownerId, LocalDateTime now, Pageable pageable);
 
     @Query("SELECT b FROM Booking AS b WHERE b.booker.id = ?1 AND b.item.id = ?2 AND b.end < ?3")
     List<Booking> findAllCompletedByBookerAndItem(Long bookerId, Long itemId, LocalDateTime now);
 
-    @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.start < ?2 AND b.end > ?2 ORDER BY b.start DESC")
-    List<Booking> findAllCurrentByOwner(Long ownerId, LocalDateTime now);
+    @Query(value = "SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND (?2 BETWEEN b.start AND b.end)")
+    List<Booking> findAllCurrentByOwner(Long ownerId, LocalDateTime now, Pageable pageable);
 
-    @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.end < ?2 ORDER BY b.start DESC")
-    List<Booking> findAllPastByOwner(Long ownerId, LocalDateTime now);
+    @Query("SELECT b FROM Booking AS b WHERE b.item.owner.id = ?1 AND b.end < ?2")
+    List<Booking> findAllPastByOwner(Long ownerId, LocalDateTime now, Pageable pageable);
 }

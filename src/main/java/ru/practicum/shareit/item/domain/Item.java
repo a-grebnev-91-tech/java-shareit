@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.shareit.requests.domain.Request;
 import ru.practicum.shareit.user.domain.User;
 
 import javax.persistence.*;
@@ -18,9 +19,12 @@ public class Item {
     private String name;
     @Column(name = "description")
     private String description;
-    @ManyToOne()
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
     @Column(name = "available")
     private boolean available;
+    @ManyToOne
+    @JoinColumn(name = "request_id")
+    private Request request;
 }

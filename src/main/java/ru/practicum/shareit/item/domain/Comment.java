@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.domain;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.user.domain.User;
@@ -10,12 +11,14 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "comments")
 public class Comment {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "text")
+    @Column(name = "text", nullable = false, length = 2500)
     private String text;
     @ManyToOne
     @JoinColumn(name = "item_id")
@@ -23,6 +26,6 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
-    @Column(name = "created")
+    @Column(name = "created", nullable = false)
     private LocalDateTime created = LocalDateTime.now();
 }
