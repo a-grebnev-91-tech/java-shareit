@@ -10,7 +10,6 @@ import ru.practicum.shareit.item.controller.dto.CommentOutputDto;
 import ru.practicum.shareit.item.controller.dto.ItemInputDto;
 import ru.practicum.shareit.item.controller.dto.ItemOutputDto;
 import ru.practicum.shareit.item.domain.ItemService;
-import ru.practicum.shareit.util.validation.ValidSortOrder;
 import ru.practicum.shareit.util.validation.groups.CreateInfo;
 import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
@@ -56,7 +55,7 @@ public class ItemController {
             @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
             @RequestParam(name = "size", defaultValue = "20") @Positive Integer size,
             @RequestParam(value = "sortBy", defaultValue = ITEMS_DEFAULT_SORT_BY) String sortBy,
-            @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER) @ValidSortOrder String order
+            @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER)/*TODO@ValidSortOrder*/ String order
     ) {
         log.info("Obtaining all items");
         ItemsParamObject params = ItemsParamObject.newBuilder().withUserId(userId).from(from).size(size).sortBy(sortBy)
@@ -87,7 +86,7 @@ public class ItemController {
             @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
             @RequestParam(name = "size", defaultValue = "20") @Positive Integer size,
             @RequestParam(value = "sortBy", defaultValue = ITEMS_DEFAULT_SORT_BY) String sortBy,
-            @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER) @ValidSortOrder String order
+            @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER)/*TODO@ValidSortOrder*/ String order
     ) {
         log.info("Searching item by {}", text);
         ItemsParamObject params = ItemsParamObject.newBuilder().withUserId(userId).withText(text).from(from).size(size)

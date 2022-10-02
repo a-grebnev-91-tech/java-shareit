@@ -1,6 +1,10 @@
-package ru.practicum.shareit.util.validation;
+package ru.practicum.shareit.validation;
 
 import org.junit.jupiter.api.Test;
+import ru.practicum.shareit.validation.SortOrderValidator;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SortOrderValidatorTest {
     @Test

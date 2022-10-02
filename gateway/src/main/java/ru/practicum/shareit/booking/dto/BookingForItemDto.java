@@ -1,6 +1,5 @@
-package ru.practicum.shareit.booking.controller.dto;
+package ru.practicum.shareit.booking.dto;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +7,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode
-public class BookingInputDto {
-    private Long itemId;
+public class BookingForItemDto {
+    private Long id;
+    private Long bookerId;
     private LocalDateTime start;
     private LocalDateTime end;
 }

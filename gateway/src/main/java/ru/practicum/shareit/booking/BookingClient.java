@@ -7,8 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.shareit.booking.dto.BookItemRequestDto;
-import ru.practicum.shareit.booking.dto.BookingState;
+import ru.practicum.shareit.booking.dto.BookingInputDto;
 import ru.practicum.shareit.client.BaseClient;
 
 import java.util.Map;
@@ -27,30 +26,47 @@ public class BookingClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getBookings(
+    public ResponseEntity<Object> bookItem(long userId, BookingInputDto dto) {
+        return post("", userId, dto);
+    }
+
+    public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
+        return get("/" + bookingId, userId);
+    }
+
+    public ResponseEntity<Object> getBookingsByBooker(
             long userId,
-            BookingState state,
+            String state,
             Integer from,
             Integer size,
             String sortBy,
             String order
     ) {
         Map<String, Object> parameters = Map.of(
-                "state", state.name(),
+                "state", state,
                 "from", from,
                 "size", size,
                 "sortBy", sortBy,
                 "order", order
         );
-        return get("?state={state}&from={from}&size={size}", userId, parameters);
+        return get("?state={state}&from={from}&size={size}&sortBy={sortBy}&order={order}", userId, parameters);
     }
 
-
-    public ResponseEntity<Object> bookItem(long userId, BookItemRequestDto requestDto) {
-        return post("", userId, requestDto);
-    }
-
-    public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
-        return get("/" + bookingId, userId);
+    public ResponseEntity<Object> getBookingsByOwner(
+            long userId,
+            String state,
+            Integer from,
+            Integer size,
+            String sortBy,
+            String order
+    ) {
+        Map<String, Object> parameters = Map.of(
+                "state", state,
+                "from", from,
+                "size", size,
+                "sortBy", sortBy,
+                "order", order
+        );
+        return get("/owner?state={state}&from={from}&size={size}&sortBy={sortBy}&order={order}", userId, parameters);
     }
 }

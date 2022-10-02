@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookItemRequestDto;
-import ru.practicum.shareit.booking.dto.BookingState;
+import ru.practicum.shareit.booking.dto.BookingInputDto;
+import ru.practicum.shareit.validation.ValidBookingState;
 import ru.practicum.shareit.validation.ValidSortOrder;
 
 import javax.validation.Valid;
@@ -26,30 +26,44 @@ public class BookingController {
 	private final BookingClient bookingClient;
 
 	@GetMapping
-	public ResponseEntity<Object> getBookings(
+	public ResponseEntity<Object> getBookingsByBooker(
 			@RequestHeader(USER_ID_HEADER) long userId,
-			@RequestParam(name = "state", defaultValue = BOOKING_DEFAULT_STATE) @ValidBookingState String stateParam,
+			@RequestParam(name = "state", defaultValue = BOOKING_DEFAULT_STATE) @ValidBookingState String state,
 			@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
 			@Positive @RequestParam(name = "size", defaultValue = "10") @Positive Integer size,
 			@RequestParam(value = "sortBy", defaultValue = BOOKING_DEFAULT_SORT_BY) String sortBy,
 			@RequestParam(value = "order", defaultValue = BOOKING_DEFAULT_ORDER) @ValidSortOrder String order
 	) {
-		BookingState state = BookingState.from(stateParam)
-				.orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-		log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
-		return bookingClient.getBookings(userId, state, from, size, sortBy, order);
+		log.info("Get booking with state {}, userId={}, from={}, size={}", state, userId, from, size);
+		return bookingClient.getBookingsByBooker(userId, state, from, size, sortBy, order);
+	}
+
+	@GetMapping("/owner")
+	public ResponseEntity<Object> getBookingsByOwner(
+			@RequestHeader(USER_ID_HEADER) long userId,
+			@RequestParam(name = "state", defaultValue = BOOKING_DEFAULT_STATE) @ValidBookingState String state,
+			@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
+			@Positive @RequestParam(name = "size", defaultValue = "10") @Positive Integer size,
+			@RequestParam(value = "sortBy", defaultValue = BOOKING_DEFAULT_SORT_BY) String sortBy,
+			@RequestParam(value = "order", defaultValue = BOOKING_DEFAULT_ORDER) @ValidSortOrder String order
+	) {
+		log.info("Get booking with state {}, ownerId={}, from={}, size={}", state, userId, from, size);
+		return bookingClient.getBookingsByOwner(userId, state, from, size, sortBy, order);
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
-			@RequestBody @Valid BookItemRequestDto requestDto) {
-		log.info("Creating booking {}, userId={}", requestDto, userId);
-		return bookingClient.bookItem(userId, requestDto);
+	public ResponseEntity<Object> bookItem(
+			@RequestHeader(USER_ID_HEADER) long userId,
+			@RequestBody @Valid BookingInputDto dto) {
+		log.info("Creating booking {}, userId={}", dto, userId);
+		return bookingClient.bookItem(userId, dto);
 	}
 
 	@GetMapping("/{bookingId}")
-	public ResponseEntity<Object> getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-			@PathVariable Long bookingId) {
+	public ResponseEntity<Object> getBooking(
+			@RequestHeader(USER_ID_HEADER) long userId,
+			@PathVariable @Positive Long bookingId
+	) {
 		log.info("Get booking {}, userId={}", bookingId, userId);
 		return bookingClient.getBooking(userId, bookingId);
 	}

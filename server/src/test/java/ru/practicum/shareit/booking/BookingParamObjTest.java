@@ -7,6 +7,7 @@ import ru.practicum.shareit.exception.BookingStateIsNotSupportedException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.practicum.shareit.booking.BookingParamObj.*;
+import static ru.practicum.shareit.util.Constants.*;
 
 class BookingParamObjTest {
 

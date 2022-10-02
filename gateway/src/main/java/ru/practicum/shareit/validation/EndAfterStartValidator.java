@@ -1,6 +1,6 @@
-package ru.practicum.shareit.util.validation;
+package ru.practicum.shareit.validation;
 
-import ru.practicum.shareit.booking.controller.dto.BookingInputDto;
+import ru.practicum.shareit.booking.dto.BookingInputDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
