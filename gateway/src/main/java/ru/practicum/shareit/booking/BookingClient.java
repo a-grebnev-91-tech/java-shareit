@@ -26,6 +26,13 @@ public class BookingClient extends BaseClient {
         );
     }
 
+    public ResponseEntity<Object> approveBooking(long bookingId, long userId, boolean approved) {
+        Map<String, Object> params = Map.of(
+                "approved", approved
+        );
+        return patch("/" + bookingId, userId, params);
+    }
+
     public ResponseEntity<Object> bookItem(long userId, BookingInputDto dto) {
         return post("", userId, dto);
     }
@@ -67,6 +74,10 @@ public class BookingClient extends BaseClient {
                 "sortBy", sortBy,
                 "order", order
         );
-        return get("/owner?state={state}&from={from}&size={size}&sortBy={sortBy}&order={order}", userId, parameters);
+        return get(
+                "/owner?state={state}&from={from}&size={size}&sortBy={sortBy}&order={order}",
+                userId,
+                parameters
+        );
     }
 }

@@ -19,6 +19,15 @@ import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 public class BookingController {
     private final BookingService service;
 
+    @PatchMapping("{bookingId}")
+    public BookingOutputDto approveBooking(
+            @PathVariable("bookingId") Long bookingId,
+            @RequestParam("approved") boolean approved,
+            @RequestHeader(USER_ID_HEADER) Long userId) {
+        log.info("User with id {} attempt to set approved = {} for booking {}", userId, approved, bookingId);
+        return service.approveBooking(bookingId, userId, approved);
+    }
+
     @PostMapping
     public BookingOutputDto bookItem(
             @RequestHeader(value = USER_ID_HEADER) Long bookerId,
@@ -74,14 +83,5 @@ public class BookingController {
         BookingParamObj paramObj = BookingParamObj.newBuilder().withUserId(userId).withState(state).from(from)
                 .size(size).sortBy(sortBy).sortOrder(order).build();
         return service.getAllBookingsByOwner(paramObj);
-    }
-
-    @PatchMapping("{bookingId}")
-    public BookingOutputDto patchBooking(
-            @PathVariable("bookingId") Long bookingId,
-            @RequestParam("approved") boolean approved,
-            @RequestHeader(USER_ID_HEADER) Long userId) {
-        log.info("User with id {} attempt to set approved = {} for booking {}", userId, approved, bookingId);
-        return service.approveBooking(bookingId, userId, approved);
     }
 }

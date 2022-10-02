@@ -24,7 +24,7 @@ services:
     image: "postgres:13"
     container_name: "shareit-db"
     ports:
-      - "5433:5432"
+      - "6541:5432"
     environment:
       - POSTGRES_DB=shareitdocker
       - POSTGRES_USER=root

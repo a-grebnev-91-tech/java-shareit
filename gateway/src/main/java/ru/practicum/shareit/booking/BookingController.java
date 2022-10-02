@@ -25,6 +25,32 @@ import static ru.practicum.shareit.util.Constants.*;
 public class BookingController {
 	private final BookingClient bookingClient;
 
+	@PatchMapping("{bookingId}")
+	public ResponseEntity<Object> approveBooking(
+			@PathVariable("bookingId") @Positive long bookingId,
+			@RequestParam("approved") boolean approved,
+			@RequestHeader(USER_ID_HEADER) @Positive long userId) {
+		log.info("User with id {} attempt to set approved = {} for booking {}", userId, approved, bookingId);
+		return bookingClient.approveBooking(bookingId, userId, approved);
+	}
+
+	@PostMapping
+	public ResponseEntity<Object> bookItem(
+			@RequestHeader(USER_ID_HEADER) long userId,
+			@RequestBody @Valid BookingInputDto dto) {
+		log.info("Creating booking {}, userId={}", dto, userId);
+		return bookingClient.bookItem(userId, dto);
+	}
+
+	@GetMapping("/{bookingId}")
+	public ResponseEntity<Object> getBooking(
+			@RequestHeader(USER_ID_HEADER) long userId,
+			@PathVariable @Positive Long bookingId
+	) {
+		log.info("Get booking {}, userId={}", bookingId, userId);
+		return bookingClient.getBooking(userId, bookingId);
+	}
+
 	@GetMapping
 	public ResponseEntity<Object> getBookingsByBooker(
 			@RequestHeader(USER_ID_HEADER) long userId,
@@ -49,22 +75,5 @@ public class BookingController {
 	) {
 		log.info("Get booking with state {}, ownerId={}, from={}, size={}", state, userId, from, size);
 		return bookingClient.getBookingsByOwner(userId, state, from, size, sortBy, order);
-	}
-
-	@PostMapping
-	public ResponseEntity<Object> bookItem(
-			@RequestHeader(USER_ID_HEADER) long userId,
-			@RequestBody @Valid BookingInputDto dto) {
-		log.info("Creating booking {}, userId={}", dto, userId);
-		return bookingClient.bookItem(userId, dto);
-	}
-
-	@GetMapping("/{bookingId}")
-	public ResponseEntity<Object> getBooking(
-			@RequestHeader(USER_ID_HEADER) long userId,
-			@PathVariable @Positive Long bookingId
-	) {
-		log.info("Get booking {}, userId={}", bookingId, userId);
-		return bookingClient.getBooking(userId, bookingId);
 	}
 }
