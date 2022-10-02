@@ -17,11 +17,11 @@ import javax.validation.constraints.PositiveOrZero;
 
 import static ru.practicum.shareit.util.Constants.*;
 
+@Slf4j
+@Validated
 @Controller
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
-@Slf4j
-@Validated
 public class BookingController {
 	private final BookingClient bookingClient;
 
@@ -45,7 +45,7 @@ public class BookingController {
 	@GetMapping("/{bookingId}")
 	public ResponseEntity<Object> getBooking(
 			@RequestHeader(USER_ID_HEADER) long userId,
-			@PathVariable @Positive Long bookingId
+			@PathVariable @Positive long bookingId
 	) {
 		log.info("Get booking {}, userId={}", bookingId, userId);
 		return bookingClient.getBooking(userId, bookingId);
@@ -55,8 +55,8 @@ public class BookingController {
 	public ResponseEntity<Object> getBookingsByBooker(
 			@RequestHeader(USER_ID_HEADER) long userId,
 			@RequestParam(name = "state", defaultValue = BOOKING_DEFAULT_STATE) @ValidBookingState String state,
-			@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-			@Positive @RequestParam(name = "size", defaultValue = "10") @Positive Integer size,
+			@RequestParam(name = "from", defaultValue = "0") @PositiveOrZero int from,
+			@RequestParam(name = "size", defaultValue = "10") @Positive int size,
 			@RequestParam(value = "sortBy", defaultValue = BOOKING_DEFAULT_SORT_BY) String sortBy,
 			@RequestParam(value = "order", defaultValue = BOOKING_DEFAULT_ORDER) @ValidSortOrder String order
 	) {
@@ -68,8 +68,8 @@ public class BookingController {
 	public ResponseEntity<Object> getBookingsByOwner(
 			@RequestHeader(USER_ID_HEADER) long userId,
 			@RequestParam(name = "state", defaultValue = BOOKING_DEFAULT_STATE) @ValidBookingState String state,
-			@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-			@Positive @RequestParam(name = "size", defaultValue = "10") @Positive Integer size,
+			@RequestParam(name = "from", defaultValue = "0") @PositiveOrZero int from,
+			@RequestParam(name = "size", defaultValue = "10") @Positive int size,
 			@RequestParam(value = "sortBy", defaultValue = BOOKING_DEFAULT_SORT_BY) String sortBy,
 			@RequestParam(value = "order", defaultValue = BOOKING_DEFAULT_ORDER) @ValidSortOrder String order
 	) {

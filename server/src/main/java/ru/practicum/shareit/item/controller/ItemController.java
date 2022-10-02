@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.ItemsParamObject;
 import ru.practicum.shareit.item.controller.dto.CommentInputDto;
@@ -10,20 +9,12 @@ import ru.practicum.shareit.item.controller.dto.CommentOutputDto;
 import ru.practicum.shareit.item.controller.dto.ItemInputDto;
 import ru.practicum.shareit.item.controller.dto.ItemOutputDto;
 import ru.practicum.shareit.item.domain.ItemService;
-import ru.practicum.shareit.util.validation.groups.CreateInfo;
-import ru.practicum.shareit.util.validation.groups.PatchInfo;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-import static ru.practicum.shareit.item.ItemsParamObject.ITEMS_DEFAULT_ORDER;
-import static ru.practicum.shareit.item.ItemsParamObject.ITEMS_DEFAULT_SORT_BY;
 import static ru.practicum.shareit.util.Constants.USER_ID_HEADER;
 
 @Slf4j
-@Validated
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -34,7 +25,7 @@ public class ItemController {
     public CommentOutputDto createComment(
             @PathVariable("itemId") Long itemId,
             @RequestHeader(USER_ID_HEADER) Long userId,
-            @RequestBody @Valid CommentInputDto comment
+            @RequestBody CommentInputDto comment
     ) {
         log.info("User with id {} attempt to post comment to item {}",userId, itemId);
         return service.createComment(comment, itemId, userId);
@@ -43,7 +34,7 @@ public class ItemController {
     @PostMapping
     public ItemOutputDto createItem(
             @RequestHeader(value = USER_ID_HEADER) long userId,
-            @RequestBody @Validated(CreateInfo.class) ItemInputDto dto
+            @RequestBody ItemInputDto dto
     ) {
         log.info("Creating user {}", dto);
         return service.createItem(userId, dto);
@@ -52,10 +43,10 @@ public class ItemController {
     @GetMapping
     public List<ItemOutputDto> getAll(
             @RequestHeader(value = USER_ID_HEADER) long userId,
-            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-            @RequestParam(name = "size", defaultValue = "20") @Positive Integer size,
-            @RequestParam(value = "sortBy", defaultValue = ITEMS_DEFAULT_SORT_BY) String sortBy,
-            @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER)/*TODO@ValidSortOrder*/ String order
+            @RequestParam(name = "from") int from,
+            @RequestParam(name = "size") int size,
+            @RequestParam(value = "sortBy") String sortBy,
+            @RequestParam(value = "order") String order
     ) {
         log.info("Obtaining all items");
         ItemsParamObject params = ItemsParamObject.newBuilder().withUserId(userId).from(from).size(size).sortBy(sortBy)
@@ -73,7 +64,7 @@ public class ItemController {
     public ItemOutputDto patchItem(
             @RequestHeader(value = USER_ID_HEADER) long userId,
             @PathVariable("itemId") long itemId,
-            @RequestBody @Validated(PatchInfo.class) ItemInputDto patchRequest
+            @RequestBody ItemInputDto patchRequest
     ) {
         log.info("User with id {} updating {}", userId, patchRequest);
         return service.patchItem(userId, itemId, patchRequest);
@@ -83,10 +74,10 @@ public class ItemController {
     public List<ItemOutputDto> searchItems(
             @RequestParam String text,
             @RequestHeader(value = USER_ID_HEADER) long userId,
-            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-            @RequestParam(name = "size", defaultValue = "20") @Positive Integer size,
-            @RequestParam(value = "sortBy", defaultValue = ITEMS_DEFAULT_SORT_BY) String sortBy,
-            @RequestParam(value = "order", defaultValue = ITEMS_DEFAULT_ORDER)/*TODO@ValidSortOrder*/ String order
+            @RequestParam(name = "from") Integer from,
+            @RequestParam(name = "size") Integer size,
+            @RequestParam(value = "sortBy") String sortBy,
+            @RequestParam(value = "order") String order
     ) {
         log.info("Searching item by {}", text);
         ItemsParamObject params = ItemsParamObject.newBuilder().withUserId(userId).withText(text).from(from).size(size)

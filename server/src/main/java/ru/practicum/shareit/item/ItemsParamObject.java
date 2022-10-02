@@ -7,15 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import ru.practicum.shareit.requests.repository.OffsetPageable;
 
+import static ru.practicum.shareit.util.Constants.*;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class ItemsParamObject {
-    public static final String ITEMS_DEFAULT_SORT_BY = "id";
-    public static final String ITEMS_DEFAULT_ORDER = "ASC";
-    public static final int DEFAULT_OFFSET = 0;
-    public static final int DEFAULT_SIZE = 20;
-
     private final Long userId;
     private final String text;
     private final Pageable pageable;
@@ -25,8 +22,8 @@ public class ItemsParamObject {
         this.text = builder.text;
         String sortBy  = builder.sortBy == null ? ITEMS_DEFAULT_SORT_BY : builder.sortBy;
         String sortOrder = builder.sortOrder == null ? ITEMS_DEFAULT_ORDER : builder.sortOrder;
-        int offset = builder.from == null ? DEFAULT_OFFSET : builder.from;
-        int size = builder.size == null ? DEFAULT_SIZE : builder.size;
+        int offset = builder.from == null ? ITEMS_DEFAULT_OFFSET : builder.from;
+        int size = builder.size == null ? ITEMS_DEFAULT_SIZE : builder.size;
         Sort sort = Sort.by(Sort.Direction.valueOf(sortOrder), sortBy);
         this.pageable = OffsetPageable.of(offset, size, sort);
     }

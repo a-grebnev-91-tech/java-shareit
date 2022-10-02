@@ -1,11 +1,12 @@
-package ru.practicum.shareit.item.controller.dto;
+package ru.practicum.shareit.item;
 
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import ru.practicum.shareit.util.validation.groups.CreateInfo;
-import ru.practicum.shareit.util.validation.groups.PatchInfo;
+import ru.practicum.shareit.item.dto.ItemInputDto;
+import ru.practicum.shareit.validation.groups.CreateInfo;
+import ru.practicum.shareit.validation.groups.PatchInfo;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

@@ -1,15 +1,26 @@
-package ru.practicum.shareit.user.controller;
+package ru.practicum.shareit.user.dto;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import ru.practicum.shareit.validation.groups.CreateInfo;
+import ru.practicum.shareit.validation.groups.PatchInfo;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 public class UserDto {
+    @Null(groups = PatchInfo.class)
     private Long id;
+    @NotBlank(groups = CreateInfo.class)
     private String name;
-    //TODO исправить после завершения проекта
-//    @UniqueEmail // constraint passed to database for YP postman's tests
+    @NotNull(groups = CreateInfo.class, message = "email should not be null")
+    @Email(groups = {CreateInfo.class, PatchInfo.class}, message = "email should be valid email address")
     private String email;
 
     @Override

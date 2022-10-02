@@ -37,15 +37,15 @@ public class BookingClient extends BaseClient {
         return post("", userId, dto);
     }
 
-    public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
+    public ResponseEntity<Object> getBooking(long userId, long bookingId) {
         return get("/" + bookingId, userId);
     }
 
     public ResponseEntity<Object> getBookingsByBooker(
             long userId,
             String state,
-            Integer from,
-            Integer size,
+            int from,
+            int size,
             String sortBy,
             String order
     ) {
@@ -62,8 +62,8 @@ public class BookingClient extends BaseClient {
     public ResponseEntity<Object> getBookingsByOwner(
             long userId,
             String state,
-            Integer from,
-            Integer size,
+            int from,
+            int size,
             String sortBy,
             String order
     ) {
