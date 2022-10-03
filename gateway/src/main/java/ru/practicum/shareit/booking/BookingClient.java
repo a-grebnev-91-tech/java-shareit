@@ -30,7 +30,7 @@ public class BookingClient extends BaseClient {
         Map<String, Object> params = Map.of(
                 "approved", approved
         );
-        return patch("/" + bookingId, userId, params);
+        return patch("/" + bookingId + "?approved={approved}", userId, params, null);
     }
 
     public ResponseEntity<Object> bookItem(long userId, BookingInputDto dto) {
