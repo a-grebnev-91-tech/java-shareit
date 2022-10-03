@@ -110,54 +110,6 @@ class RequestControllerTest {
     }
 
     @Test
-    void test3_creatingRequestShouldReturnBadRequestForBlankDescription() throws Exception {
-        RequestInputDto invalidDto = new RequestInputDto();
-        mockMvc.perform(post(ROOT_PATH)
-                        .content(jsonMapper.writeValueAsString(invalidDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .headers(HEADER_WITH_USER_ID)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        invalidDto.setDescription("");
-        mockMvc.perform(post(ROOT_PATH)
-                        .content(jsonMapper.writeValueAsString(invalidDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .headers(HEADER_WITH_USER_ID)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        invalidDto.setDescription(" ");
-        mockMvc.perform(post(ROOT_PATH)
-                        .content(jsonMapper.writeValueAsString(invalidDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .headers(HEADER_WITH_USER_ID)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        invalidDto.setDescription(" \t");
-        mockMvc.perform(post(ROOT_PATH)
-                        .content(jsonMapper.writeValueAsString(invalidDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .headers(HEADER_WITH_USER_ID)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        invalidDto.setDescription(" \n");
-        mockMvc.perform(post(ROOT_PATH)
-                        .content(jsonMapper.writeValueAsString(invalidDto))
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .headers(HEADER_WITH_USER_ID)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void test4_gettingRequestsByValidUserShouldReturnOk() throws Exception {
         when(service.getAllRequestsByUser(USER_ID)).thenReturn(List.of(outputDto));
 
@@ -199,9 +151,9 @@ class RequestControllerTest {
 
     @Test
     void test7_getAllRequestsButUser() throws Exception {
-        when(service.getAllRequestsButUser(anyLong(), anyInt(), anyInt())).thenReturn(List.of(outputDto));
+        when(service.getAllRequestsButUser(USER_ID, 0, 10)).thenReturn(List.of(outputDto));
 
-        mockMvc.perform(get(ROOT_PATH + "/all")
+        mockMvc.perform(get(ROOT_PATH + "/all?from=0&size=10")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .headers(HEADER_WITH_USER_ID)
                         .accept(MediaType.APPLICATION_JSON))
