@@ -1,0 +1,111 @@
+10. несущ. юзер пытается получить букинг ---- нот фаунд
+11.левый юзер
+12.нулл юзер
+13.несущ юзер ищет несущ бук
+14.левый юзер ищет несущ бук
+15.несущ юзер ищет нуловый бук
+16.левый юзер ищет нуловый бук
+17.владелец вещи получает бук
+букер получает бук
+
+создание букинга
+=======
+18.юзер бронит доступную вещь
+    в репо приходит объект букинга
+19.владелец пытается забронить доступную вещь
+    нот фаунд
+    //NOT20.не сущ. юзер пыт забронить д.в.
+    нот фаунд
+    //NOT21.нул юзер пыт забронить д.в.
+    чо тут хз
+    //NOT 22.юзер бронит не существ вещь
+    нот фаунд
+    //NOT 23.юзер бронит нуловую вещь
+    нот фаунд
+20. юзер пытается забронить не доступную в.
+    нот эвэйлебл
+
+получить по букеру и статусу
+================
+21.для не сущ букера кидаем исключение
+22.для нула букера
+23.24для WAITING и REJECTED
+    вызывается bookRepo.findAllByBookerIdAndStatus
+25. для АЛЛ
+    вызывается findAllByBookerId
+26/ PAST
+    вызывается findAllPastByBooker
+27/ CURRENT
+    findAllCurrentByBooker
+28/ FUTURE
+    findAllCurrentByBooker
+
++++++++++++
+BookingMapper
++++++++++
+mapToLast
+=========
+айтем айди
+сразу тестим оба метода
+для кесов:
+букинги только впереди
+    возвращаем нулл для туЛаст
+    возвращаем правильный бук для туНекст
+букинги только позади
+    возвращаем правильный бук для туЛаст
+    возвращаем нулл для туНекст
+букинги и вереди и позади
+    возвращаем правильный для туЛаст
+    возвращаем правильный для туНекст
+
+два метода для будущего и прошлого бронирования
+
+
+
++++++++++++++++++
+BookingParamObj
++++++++++++++++++
+1тестируем создание пустого билдера
+2тестируем создание заполненного билдера
+3тестируем выкидывание исключения
+        для невалидного букингСтэйт
+4тестируем выкидывание исключения
+        для невалидного сортОрдер
+5тестируем выкидывание исключения
+        для невалидного сайза
+6тестируем выкидывание исключения
+        для невалидного фрома
+
+
+
+    private Long id = 1L;
+    private String name = "name";
+    private String description = "descr";
+    private Boolean available = true;
+    private Long requestId = 2L;
+    private Long commentId = 3L;
+    private String commentText = "text";
+    private String commentAuthorName = "author";
+    private LocalDateTime commentCreated = LocalDateTime.now().minusDays(1);
+    private Long lastBookingId = 4L;
+    private Long lastBookingBookerId = 5L;
+    private LocalDateTime lastBookingStart = LocalDateTime.now().minusHours(2);
+    private LocalDateTime lastBookingEnd = LocalDateTime.now().minusHours(1);
+    private Long nextBookingId = 6L;
+    private Long nextBookingBookerId = 7L;
+    private LocalDateTime nextBookingStart = LocalDateTime.now().plusHours(1);
+    private LocalDateTime nextBookingEnd = LocalDateTime.now().plusDays(2);
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
+
+
+
++++++++++++++++++++++++++++
+ItemService
+++++++++++++++++++++
+getItem
+=================
+айтем не существует
+юзер не существует
+айтем - оунера, с букингами
+айтем - левого, букинг нулл
